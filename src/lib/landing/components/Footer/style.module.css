@@ -1,0 +1,15 @@
+.text-yellow {
+  color: #f6c927;
+}
+
+.icon{
+  text-decoration: none;
+  color: white;
+  transition: 150ms ease-in-out;
+}
+
+.icon:hover {
+  color: #f6c927;
+  transform: scale(1.1);
+  width: min-content;
+}

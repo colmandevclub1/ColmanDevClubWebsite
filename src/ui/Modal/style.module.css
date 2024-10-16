@@ -1,0 +1,12 @@
+.button {
+  background-color: #f6c927 !important;
+  color: #222222 !important;
+  font-weight: 900;
+  transition: 200ms ease-in-out;
+  margin: 1rem auto 0 auto;
+}
+
+.button:hover {
+  background-color: #f6c927 !important;
+  filter: brightness(0.85);
+}

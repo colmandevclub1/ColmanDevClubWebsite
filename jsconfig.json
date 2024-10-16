@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "ui/*": ["./ui/*"],
+        "assets/*": ["./assets/*"],
+        "components/*": ["./components/*"],
+        "theme/*": ["./theme/*"],
+        "animations/*": ["./animations/*"],
+        "config/*": ["./config/*"]
+      }
+    },
+    "include": ["src/**/*", "src/theme.jsx"],
+    "exclude": ["node_modules"]
+  }
