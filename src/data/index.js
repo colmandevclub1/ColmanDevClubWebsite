@@ -1,15 +1,9 @@
-import { emailValidation, idValidation, numberValidation, selectionValidation, stringValidation } from '../utils';
+import { emailValidation, idValidation, experienceValidation, numberValidation, selectionValidation, stringValidation } from '../utils';
+
 
 export const labels = [
   {
-    label: 'ID',
-    type: 'TextField',
-    showInput: 'true',
-    key: 'id',
-    validator: idValidation,
-  },
-  {
-    label: 'Full Name - (English)',
+    label: 'Full Name (English)',
     type: 'TextField',
     showInput: 'true',
     key: 'fullName',
@@ -21,6 +15,13 @@ export const labels = [
     showInput: 'true',
     key: 'email',
     validator: emailValidation,
+  },
+  {
+    label: 'ID',
+    type: 'TextField',
+    showInput: 'true',
+    key: 'id',
+    validator: idValidation,
   },
   // {
   //   label: "Password",
@@ -73,7 +74,7 @@ export const labels = [
     type: 'TextField',
     showInput: 'true',
     key: 'experienceDetails',
-    validator: stringValidation,
+    validator: experienceValidation,
   },
 ];
 
@@ -87,13 +88,13 @@ export const allRules = [
 
 export const errorMessages = {
   id: 'ID is not valid',
-  experienceDetails: 'Required Field',
+  experienceDetails: 'Tell us about your experience',
   experience: 'Required Field',
   program: 'Required Field',
   schoolYear: 'Required Field',
   fieldOfStudy: 'Required Field',
   phoneNumber: 'Phone number must contain 10 digits',
   email: 'Email is not valid',
-  fullName: 'Name must be in English and must contain atleast 3 chars.',
+  fullName: 'Must be in English! min 3 characters',
   // password: "Password must contain atleast 6 chars.",
 };

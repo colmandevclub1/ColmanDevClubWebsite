@@ -9,6 +9,7 @@ const FormSelectField = ({ label, onChange, options, error, sx = { textAlign: "c
         labelId={label}
         onChange={onChange}
         label={label}
+        defaultValue={""}
       >
         {options.map((option) => (
           <MenuItem value={option} key={option} divider>
