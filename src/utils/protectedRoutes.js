@@ -5,7 +5,7 @@ import { UserAuth } from '../lib/auth/authContext.js';
 const ProtectedRoute = ({ children }) => {
   const { user } = UserAuth();
 
-  if (!user) return <Navigate to="/sign-in" />;
+  if (!user) return <Navigate to="/signin" />;
 
   return children;
 };

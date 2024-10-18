@@ -1,5 +1,5 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
-import { YouTubeVideo } from "src/components/YouTubeVideo";
+import { YouTubeVideo } from "src/ui/YouTubeVideo";
 import { Carousel } from "../../components";
 import { ArrowButton } from "src/ui";
 import { StyledCard } from "./SyllbusPage.styles";

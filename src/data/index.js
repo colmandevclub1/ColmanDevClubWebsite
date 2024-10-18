@@ -40,7 +40,7 @@ export const labels = [
     label: 'Field of Study',
     type: 'Select',
     showInput: 'true',
-    options: ['מדעי המחשב', 'מערכות מידע', 'מדעי הנתונים'],
+    options: ['מדעי המחשב', 'מערכות מידע', 'מדעי הנתונים', 'אחר'],
     key: 'fieldOfStudy',
     validator: selectionValidation,
   },

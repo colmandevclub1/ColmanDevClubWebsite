@@ -1,5 +1,13 @@
 .container {
   text-align: center;
+  max-width: 1000px;
+  margin: auto;
+
+}
+
+.container-signup{
+  display: flex;
+  justify-content: center;
 }
 
 .text-yellow {
@@ -17,4 +25,9 @@ ul {
 
 li {
   margin-top: 0.5rem;
+}
+
+.facebook-icon{
+  display: flex;
+  background-color: #f6c927;
 }

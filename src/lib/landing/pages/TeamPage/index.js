@@ -1,14 +1,14 @@
 import { Container, Typography } from '@mui/material';
-import { useQuery } from 'react-query';
-import { fetchData } from '../../../../config/firebase-utils';
 import CardList from '../../../../ui/CardList/CardList';
 import Loader from '../../../../ui/Loader';
 import { TeamMemberCard } from '../../components';
 import css from './style.module.css';
+import { useFirestoreFetch } from 'src/hooks/useFirestoreFetch';
 
 //TODO: remove the using of css module
 export default function TeamPage() {
-  const { data: cards, isLoading } = useQuery('teamMembers', () => fetchData('team'));
+  const { data: cards, isLoading } = useFirestoreFetch('team');
+
   return (
     <Container maxWidth="lg" sx={{ my: 2 }}>
       <Typography

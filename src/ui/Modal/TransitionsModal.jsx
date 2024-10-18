@@ -29,7 +29,7 @@ export default function TransitionsModal({
         }}
       >
         <Fade in={openModal}>
-          <ModalBox>
+          <ModalBox sx={{borderRadius: '20px'}}>
             <Typography
               id="transition-modal-title"
               variant="h6"

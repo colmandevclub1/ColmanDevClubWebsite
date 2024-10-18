@@ -29,26 +29,26 @@ const ProjectCard = ({ image_url, title, description, github_url, website_url, l
             {title}
           </Typography>
           <Box>
-            <Tooltip title="Check out the project on GitHub">
-              {github_url && (
+            {github_url && (
+              <Tooltip title="Check out the project on GitHub">
                 <IconButton href={github_url} target="_blank" rel="noreferrer">
                   <GitHubIcon sx={{ fontSize: '1.75rem' }} color="primary" />
                 </IconButton>
-              )}
-            </Tooltip>
-            <Tooltip title="Check out the project on web">
-              {website_url && (
+              </Tooltip>
+            )}
+            {website_url && (
+              <Tooltip title="Check out the project on web">
                 <IconButton href={website_url} target="_blank" rel="noreferrer">
                   <LanguageIcon sx={{ fontSize: '1.75rem' }} color="primary" />
                 </IconButton>
-              )}
-            </Tooltip>
+              </Tooltip>
+            )}
           </Box>
         </Stack>
         <Typography variant="body1">{description}</Typography>
       </CardContent>
       <CardActions disableSpacing sx={{ gap: '5px' }}>
-        {language && language.map((lang) => <Chip label={lang} />)}
+        {language && language.map((lang) => <Chip key={lang} label={lang} />)}
       </CardActions>
     </Card>
   );

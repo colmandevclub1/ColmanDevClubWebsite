@@ -1,7 +1,5 @@
+import { fetchData } from 'src/hooks/useFirestoreFetch';
 import validator from 'validator';
-
-import { fetchData } from '../config/firebase-utils';
-// import axios from 'axios';
 
 const emailValidation = (email) => {
   const test = validator.trim(email);

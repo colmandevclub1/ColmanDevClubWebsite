@@ -1,0 +1,48 @@
+.text-yellow {
+  color: #f6c927;
+}
+
+.terms {
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+ul {
+  padding-right: 1rem;
+}
+
+li {
+  margin-top: 0.5rem;
+}
+
+.container-method {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 50px;
+  background-color: #0e0e27;
+  width: fit-content;
+  margin: auto;
+  padding: 70px 60px 70px 60px;
+  border-radius: 10px;
+  border: 1px solid #1F1F53;
+}
+
+.options-button {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  background-color: #0a0a1b;
+  border: 1px solid #1F1F53;
+  color: #D3D3D3;
+  border-radius: 5px;
+  padding: 5px 30px 5px 30px;
+  cursor: pointer;
+}
+
+.email {
+  text-decoration: underline;
+  cursor: pointer;
+}

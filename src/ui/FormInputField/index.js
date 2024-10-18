@@ -1,11 +1,6 @@
 import { TextField } from "@mui/material";
 
-const FormInputField = ({
-  label,
-  onChange,
-  sx = { textAlign: "center" },
-  error,
-  type = "text",
+const FormInputField = ({ label, onChange, sx = { textAlign: "center" }, error, type = "text",
 }) => {
   return (
     <TextField

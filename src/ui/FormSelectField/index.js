@@ -1,13 +1,13 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-const FormSelectField = ({ label, onChange, options, error, type }) => {
+const FormSelectField = ({ label, onChange, options, error, sx = { textAlign: "center" },
+  type }) => {
   return (
-    <FormControl fullWidth error={error}>
+    <FormControl fullWidth error={error} sx={sx}>
       <InputLabel id={label}>{label}</InputLabel>
       <Select
         labelId={label}
         onChange={onChange}
-        sx={{ color: "white" }}
         label={label}
       >
         {options.map((option) => (
