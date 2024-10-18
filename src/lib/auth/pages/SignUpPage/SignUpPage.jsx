@@ -10,6 +10,7 @@ import { ArrowButton, TransitionsModal } from 'src/ui';
 import SignUpMethod from './components/SignUpMethod';
 import Avatar from '@mui/material/Avatar';
 import { useCreateUser } from 'src/hooks/firebase.hooks';
+import { fetchData } from 'src/config/firebase-utils'
 
 const FIELDS_MAP = {
   TextField: FormInputField,
@@ -18,6 +19,7 @@ const FIELDS_MAP = {
 
 const SignUpPage = () => {
   const navigate = useNavigate();
+  const createUser = useCreateUser();
   const [openModal, setOpenModal] = React.useState(false);
   const [formValues, setFormValues] = React.useState({});
   const [validationErrors, setValidationErrors] = React.useState({});
