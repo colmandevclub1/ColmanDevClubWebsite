@@ -10,6 +10,7 @@ import { ArrowButton, TransitionsModal } from 'src/ui';
 import SignUpMethod from './components/SignUpMethod';
 import Avatar from '@mui/material/Avatar';
 import { useCreateUser } from 'src/hooks/firebase.hooks';
+import { fetchData } from 'src/hooks/useFirestoreFetch';
 
 const FIELDS_MAP = {
   TextField: FormInputField,
@@ -17,6 +18,7 @@ const FIELDS_MAP = {
 };
 
 const SignUpPage = () => {
+  const createUser = useCreateUser();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = React.useState(false);
   const [formValues, setFormValues] = React.useState({});
