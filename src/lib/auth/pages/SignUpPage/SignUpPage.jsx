@@ -10,7 +10,7 @@ import { ArrowButton, TransitionsModal } from 'src/ui';
 import SignUpMethod from './components/SignUpMethod';
 import Avatar from '@mui/material/Avatar';
 import { useCreateUser } from 'src/hooks/firebase.hooks';
-import { fetchData } from 'src/config/firebase-utils'
+import { fetchData } from 'src/hooks/useFirestoreFetch';
 
 const FIELDS_MAP = {
   TextField: FormInputField,

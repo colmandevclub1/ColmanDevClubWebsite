@@ -1,5 +1,3 @@
-import React from 'react';
-
 
 export const generateRows = (data, totalColCriteria, totalRowCriteria) => {
   const mainColumnKey = Object.keys(data[0])[0];
