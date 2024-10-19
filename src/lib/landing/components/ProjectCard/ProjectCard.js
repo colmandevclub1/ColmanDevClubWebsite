@@ -47,7 +47,7 @@ const ProjectCard = ({ image_url, title, description, github_url, website_url, l
         </Stack>
         <Typography variant="body1">{description}</Typography>
       </CardContent>
-      <CardActions disableSpacing sx={{ gap: '5px' }}>
+      <CardActions disableSpacing sx={{ gap: '5px', flexWrap: "wrap" }}>
         {language && language.map((lang) => <Chip key={lang} label={lang} />)}
       </CardActions>
     </Card>
