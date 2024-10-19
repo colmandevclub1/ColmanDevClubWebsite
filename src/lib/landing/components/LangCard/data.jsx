@@ -4,7 +4,7 @@ export const typesCards = [
   {
     id: 1,
     title: 'HTML',
-    description: 'מה זה HTML? ואיך אני משתמש בו?',
+    description: 'שפת הבסיס לבניית כל אתר - למה היא כל כך חשובה?',
     icon: faHtml5,
     color: '#E44D26',
     link: 'https://www.youtube.com/watch?v=UB1O30fR-EE',
@@ -12,7 +12,7 @@ export const typesCards = [
   {
     id: 2,
     title: 'CSS',
-    description: 'מה זה CSS? ואיך אני משתמש בו?',
+    description: 'איך מעצבים אתר? הכוח של CSS לעיצוב מראה האתר.',
     icon: faCss3Alt,
     color: '#264DE4',
     link: 'https://www.youtube.com/watch?v=1Rs2ND1ryYc',
@@ -20,7 +20,7 @@ export const typesCards = [
   {
     id: 3,
     title: 'JavaScript',
-    description: 'מה זה JavaScript? ואיך אני משתמש בו?',
+    description: 'הופכים את האתר לדינמי ואינטראקטיבי בעזרת JavaScript.',
     icon: faJsSquare,
     color: '#F0DB4F',
     link: 'https://www.youtube.com/watch?v=PkZNo7MFNFg',
@@ -28,7 +28,7 @@ export const typesCards = [
   {
     id: 4,
     title: 'React',
-    description: 'מה זה React? ואיך אני משתמש בו?',
+    description: 'ספריית JavaScript לבניית ממשקי משתמש מתקדמים בקלות.',
     icon: faReact,
     color: '#61DBFB',
     link: 'https://www.youtube.com/watch?v=Ke90Tje7VS0',
@@ -36,7 +36,7 @@ export const typesCards = [
   {
     id: 5,
     title: 'NodeJS',
-    description: 'מה זה NodeJS? ואיך אני משתמש בו?',
+    description: 'איך מריצים JavaScript בצד השרת עם NodeJS?',
     icon: faNodeJs,
     color: '#3C873A',
     link: 'https://www.youtube.com/watch?v=TlB_eWDSMt4',
