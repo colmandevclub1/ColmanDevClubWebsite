@@ -1,40 +1,48 @@
-import { Typography } from '@mui/material';
-import React from 'react';
+import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { SectionContainer } from './SectionTwo';
 import { ArrowButton } from '../../../../ui';
+import { SectionContainer } from './SectionTwo';
 
 const SectionThree = () => {
   const navigate = useNavigate();
   return (
-    <SectionContainer
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
-        background: '#040413',
-        borderTop: '1px solid #1F1F53',
-        borderBottom: '1px solid #1F1F53',
-      }}
-    >
-      <Typography variant="h3" sx={{ direction: 'rtl', marginBottom: '3rem' }} fontWeight={900}>
-        איך מתקבלים?
-      </Typography>
-      <Typography variant="h5" sx={{ direction: 'rtl', marginBottom: '2rem' }} textAlign={'center'}>
-        המועדון הוא מועדון אקסקלוסיבי - יש לנו מספר מוגבל של מקומות.
-        <br />
-        כדי להצטרף למועדון צריך לעבור מיונים מקיפים.
-        <br />
-        הדבר שהכי חשוב לנו הוא לסייע לכם להתקדם בתחום, להתנסות בעבודה עצמאית,
-        <br />
-        לצאת לשוק העבודה עם תיק עבודות מרשים, וכמובן, לצאת מתכנתי על, ולא פחות מזה!
-        <br />
-        אתם.ן בעלי מוטיבציה גבוהה, יכולת למידה עצמית והתמדה? מוזמנים להירשם!
-      </Typography>
-      <ArrowButton variant="contained" onClick={() => navigate('/Signup')}>
-        Getting Started
-      </ArrowButton>
-    </SectionContainer>
+    <>
+      <SectionContainer
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          background: '#040413',
+          borderTop: '1px solid #1F1F53',
+        }}
+      >
+        <Typography variant="h3" sx={{ direction: 'rtl', marginBottom: '3rem' }} fontWeight={900}>
+          איך מתקבלים?
+        </Typography>
+        <Typography variant="h5" sx={{ direction: 'rtl', marginBottom: '0rem' }} textAlign={'center'}>
+          המועדון שלנו עם מספר מקומות מוגבל ומיועד למי שרוצה באמת ללמוד.
+          <br />
+          על מנת להצטרף, יש לעבור תהליך מיון קפדני.
+          <br />
+          המטרה המרכזית שלנו היא לעזור לכם להתקדם באופן מקצועי, לרכוש ניסיון בעבודה עצמאית,
+          <br />
+          ולבנות תיק עבודות מרשים שיפתח לכם דלתות בתעשייה.
+          <br />
+          אנחנו מחפשים מועמדים בעלי מוטיבציה גבוהה, יכולת למידה עצמית, והתמדה.
+          <br />
+           אם אתם שואפים להפוך למתכנתים מובילים בתעשייה, נשמח לראות אתכם נרשמים ומצטרפים אלינו!
+          <br />
+
+        </Typography>
+      </SectionContainer>
+      <Box sx={{
+        display: 'flex', justifyContent: 'center', borderBottom: '1px solid #1F1F53', paddingBottom: '3rem',
+      }}>
+        <ArrowButton variant="contained" onClick={() => navigate('/signup')}>
+          לחצו להגשת מועמדות
+        </ArrowButton>
+      </Box >
+    </>
   );
 };
 

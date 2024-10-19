@@ -53,7 +53,7 @@ const SectionOne = () => {
             <br />
             <br />
           </Typography>
-          <ArrowButton onClick={() => navigate('/Signup')}>להרשמה לחצו כאן</ArrowButton>
+          <ArrowButton onClick={() => navigate('/signup')}>לחצו להגשת מועמדות</ArrowButton>
         </Stack>
       </Grid>
       <Grid item xs={12}>
