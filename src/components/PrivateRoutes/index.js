@@ -35,7 +35,6 @@ const PrivateRoutes = () => {
   const test = async () => {
     if (!isAdmin) return;
     const usersArray = await fetchData('users');
-    console.log(usersArray);
     // first take the formValues, after it take the values from the enumCsvFields and map them to an array.
     const formattedData = usersArray.map(({ formValues, newUser }) => {
       //  Object.values(enumCsvFields) = ["email", "experience", "experienceDetails", "fieldOfStudy", "id", "phoneNumber", "program", "schoolYear"]

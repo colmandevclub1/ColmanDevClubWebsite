@@ -6,7 +6,6 @@ export const addUser = async (user) => {
     // const userWithoutPassword = { ...user };
     // delete userWithoutPassword.password;
     const docRef = await addDoc(collection(db, 'users'), user);
-    console.log('Document written with ID: ', docRef.id);
   } catch (e) {
     //TODO : send to Google Analytics an event with the user.
     console.error('Error adding document: ', e);
@@ -16,7 +15,6 @@ export const addUser = async (user) => {
 export const addMemberToTeam = async (user) => {
   try {
     const docRef = await addDoc(collection(db, 'team'), user);
-    console.log('Document written with ID: ', docRef.id);
   } catch (e) {
     //TODO : send to Google Analytics an event with the user.
     console.error('Error adding document: ', e);

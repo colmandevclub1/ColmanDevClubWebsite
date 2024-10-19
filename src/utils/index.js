@@ -27,7 +27,7 @@ const checkEnglishName = (name) => {
   if (name.match(/^[a-zA-Z ]+$/)) {
     return name;
   }
-  return "";
+  return '';
 };
 
 const numberValidation = (number) => {
@@ -69,13 +69,11 @@ const passwordValidation = (password) => {
 
 const selectionValidation = (selectValue) => {
   if (typeof selectValue !== 'string') return false;
-  return !(validator.isEmpty(selectValue));
+  return !validator.isEmpty(selectValue);
 };
 
 export const fetchAllUsers = async () => {
   const users = await fetchData('users');
-  // console.log('users[0] ', users[0].formValues);
-  // eslint-disable-next-line array-callback-return
   users.map((user) => {
     sendDataToAgudaForm(
       user.formValues.email,
@@ -143,4 +141,13 @@ export const sendDataToAgudaForm = async (
   // });
 };
 
-export { emailValidation, stringValidation, experienceValidation, numberValidation, selectionValidation, idValidation, passwordValidation, checkEnglishName };
+export {
+  emailValidation,
+  stringValidation,
+  experienceValidation,
+  numberValidation,
+  selectionValidation,
+  idValidation,
+  passwordValidation,
+  checkEnglishName,
+};

@@ -66,7 +66,7 @@ const Layout = ({ children }) => {
           </Stack>
         </Stack>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, height: '100svh' }} bgcolor={'#21213E'}>
         <DrawerHeader />
         {children}
       </Box>

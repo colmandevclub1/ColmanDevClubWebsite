@@ -9,7 +9,7 @@ const TotalRowComponent = ({ data }) => {
   );
 };
 
-export const generateColumns = (data,totalColCriteria) => {
+export const generateColumns = (data, totalColCriteria) => {
   const firstRow = data[0];
   const mainColumnKey = Object.keys(firstRow)[0];
 
@@ -26,7 +26,7 @@ export const generateColumns = (data,totalColCriteria) => {
       }
     },
   };
-  
+
   const columns = [mainColumn];
 
   Object.keys(firstRow).forEach((key) => {

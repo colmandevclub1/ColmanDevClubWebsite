@@ -1,4 +1,3 @@
-// ControlTable.js
 import React, { useState, useEffect } from 'react';
 import { TableContainer, Table, TableHead, TableBody, Paper } from '@mui/material';
 import { generateRows } from './generateRows';
@@ -14,17 +13,16 @@ const ControlTable = (props) => {
     if (Array.isArray(props.data) && props.data.length > 0) {
       const newColumns = generateColumns(props.data, props.totalColCriteria, props.totalRowCriteria);
       const newRows = generateRows(props.data, props.totalColCriteria, props.totalRowCriteria);
+      console.log(newRows);
       setColumns(newColumns);
       setRows(newRows);
     }
   }, [props.data]);
 
-  const totalWidth = columns.reduce((sum, column) => sum + column.width + 20, 0);
-
   return (
-    <TableContainer component={Paper} style={{ backgroundColor: '#121231', width: `${totalWidth}px`,height:'80vh' }}>
-      <Table sx={{tableLayout: 'fixed',borderCollapse: 'separate',borderSpacing: '3px'}}>
-        <TableHead>
+    <TableContainer component={Paper} sx={{ borderRadius: 3, overflow: 'auto', height: '80svh' }}>
+      <Table sx={{ tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 5 }}>
+        <TableHead sx={{ position: 'sticky', top: '5px', zIndex: 1 }}>
           <TableHeader columns={columns} />
         </TableHead>
         <TableBody>
