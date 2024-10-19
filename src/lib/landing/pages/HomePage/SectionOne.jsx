@@ -57,7 +57,7 @@ const SectionOne = () => {
         </Stack>
       </Grid>
       <Grid item xs={12}>
-        <Grid container gap={{ xs: 2, md: 4 }} justifyContent={'center'}>
+        <Grid container gap={{ xs: 2, md: 4 }} justifyContent={'center'} sx={{display: 'flex', flexDirection: 'row-reverse'}}>
           {typesCards.map((card, index) => {
             return (
               <Grid key={card.id} item xs={12} md={3} lg={2} >

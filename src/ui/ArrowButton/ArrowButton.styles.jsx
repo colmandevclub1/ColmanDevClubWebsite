@@ -2,7 +2,7 @@ import { Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const ArrowIconContainer = styled(Stack)(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: 8,
   height: '100%',
   width: 80,
   alignItems: 'center',
