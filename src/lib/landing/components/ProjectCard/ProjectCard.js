@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 
 import { GitHub as GitHubIcon, Language as LanguageIcon } from '@mui/icons-material/';
+import { LanguageChip } from './LanguageChip';
 
 const ProjectCard = ({ image_url, title, description, github_url, website_url, language }) => {
   return (
@@ -48,7 +49,7 @@ const ProjectCard = ({ image_url, title, description, github_url, website_url, l
         <Typography variant="body1">{description}</Typography>
       </CardContent>
       <CardActions disableSpacing sx={{ gap: '5px', flexWrap: "wrap" }}>
-        {language && language.map((lang) => <Chip key={lang} label={lang} />)}
+        {language && language.map((lang) => <Chip key={lang} label={<LanguageChip lang={lang}/>} />)}
       </CardActions>
     </Card>
   );
