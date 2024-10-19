@@ -16,7 +16,7 @@ export const generateColumns = (data, totalColCriteria) => {
   const mainColumn = {
     field: mainColumnKey,
     headerName: mainColumnKey,
-    width: 330,
+    width: 250,
     renderCell: (row) => {
       const mainColumnData = row[mainColumnKey];
       if (row.id === 'total') {
@@ -36,7 +36,7 @@ export const generateColumns = (data, totalColCriteria) => {
         const subColumns = Object.keys(subColumnsData).map((subKey) => ({
           field: `${key}_${subKey}`,
           headerName: subKey,
-          width: 100,
+          width: 60,
           type: subKey,
         }));
         columns.push({
@@ -48,7 +48,7 @@ export const generateColumns = (data, totalColCriteria) => {
         columns.push({
           field: key,
           headerName: key,
-          width: 150,
+          width: 80,
           type: key,
         });
       }
@@ -60,7 +60,7 @@ export const generateColumns = (data, totalColCriteria) => {
     subColumns: Object.entries(totalColCriteria).map(([key]) => ({
       field: `total_${key}`,
       headerName: `Total ${key}`,
-      width: 150,
+      width: 80,
     })),
     width: Object.keys(totalColCriteria).length * 150,
   };
