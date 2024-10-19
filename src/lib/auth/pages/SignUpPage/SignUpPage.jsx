@@ -1,4 +1,4 @@
-import { Box, Checkbox, Container, Grid, Typography } from '@mui/material';
+import { Box, Checkbox, CircularProgress, Container, Grid, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import * as React from 'react';
@@ -12,6 +12,9 @@ import FormInputField from 'src/ui/FormInputField';
 import FormSelectField from 'src/ui/FormSelectField';
 import SignUpMethod from './components/SignUpMethod';
 import css from './style.module.css';
+import { toast } from 'react-toastify';
+import Loader from './components/Loader';
+
 
 const FIELDS_MAP = {
   TextField: FormInputField,
@@ -25,16 +28,26 @@ const SignUpPage = () => {
   const [formValues, setFormValues] = React.useState({});
   const [validationErrors, setValidationErrors] = React.useState({});
   const [openRulesModal, setOpenRulesModal] = React.useState(false);
+  const [loader, setLoader] = React.useState(false);
   const [rules, setRules] = React.useState(false);
   const [methodClicked, setMethodClicked] = React.useState(false);
   const [profilePic, setProfilePic] = React.useState(null);
   const [profilePicPreview, setProfilePicPreview] = React.useState(null);
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
+  const [checkBoxes, setCheckBoxes] = React.useState({
+    first: false,
+    second: false,
+  });
 
   const storage = getStorage();
 
   const onSignupHandler = async () => {
+    if (!checkBoxes.first && !checkBoxes.second) {
+      toast.error('יש לבחור תאריך מיון');
+      return;
+    }
+
     const validationState = labels.reduce((obj, { key, validator }) => {
       obj[key] = !validator(formValues[key]);
       return obj;
@@ -59,15 +72,29 @@ const SignUpPage = () => {
       return;
     }
 
+    setLoader(true);
     let profilePicUrl = '';
     if (profilePic) {
       const storageRef = ref(storage, `profilePics/${profilePic.name}`);
       await uploadBytes(storageRef, profilePic);
       profilePicUrl = await getDownloadURL(storageRef);
     }
+    setLoader(false);
+
+
+    let sortingDates = '';
+    if (checkBoxes.first && checkBoxes.second) {
+      sortingDates = '10.11.2024, 14.11.2024';
+    }
+    else if (checkBoxes.first) {
+      sortingDates = '10.11.2024';
+    }
+    else {
+      sortingDates = '14.11.2024';
+    }
 
     setOpenModal(true);
-    const newUser = { ...formValues, profilePic: profilePicUrl, date: new Date().toLocaleDateString() };
+    const newUser = { ...formValues, profilePic: profilePicUrl, sortingDate: sortingDates, date: new Date().toLocaleDateString() };
     createUser.mutate(newUser);
   };
 
@@ -214,13 +241,14 @@ const SignUpPage = () => {
                     </EntranceAnimation>
                   );
                 })}
+
               </Box>
               <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Grid item xs={12} md={6}>
                   <TransitionsModal
                     openModal={openModal}
                     setOpenModal={setOpenModal}
-                    title={'נרשמת בהצלחה'}
+                    title={'נרשמת בהצלחה!'}
                     closeOnOverlay={false}
                     btnText="מעבר לדף הבית"
                     btnOnClick={goHome}
@@ -230,6 +258,7 @@ const SignUpPage = () => {
                       sx={{
                         textAlign: 'center',
                         marginBottom: '2rem',
+                        marginTop: '2rem',
                       }}
                     >
                       מוזמנים להצטרף לקבוצת הוואטספ שלנו
@@ -266,32 +295,86 @@ const SignUpPage = () => {
                         justifyContent: 'center',
                         width: '100%',
                       }}
-                    ></Container>
+                    >
+
+                    </Container>
                   </TransitionsModal>
-                  <Container
+
+                  <Loader loading={loader} />
+                  <Box
                     sx={{
-                      display: 'flex',
-                      flexDirection: 'row-reverse',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '30px',
+                      display: 'grid',
+                      gridTemplateColumns: { sm: '1fr', md: '1fr' },
+                      gap: '1rem',
                     }}
+
                   >
-                    <Checkbox
-                      defaultChecked={rules ? true : false}
-                      onClick={() => {
-                        setRules((prev) => !prev);
-                        setOpenRulesModal(false);
-                      }}
-                      sx={{ color: 'white' }}
-                    />
-                    <Typography >
-                      אני מאשר\ת את תנאי{' '}
-                      <span className={css['terms']} onClick={() => setOpenRulesModal((prev) => !prev)}>
-                        התקנון
-                      </span>
+                    <Typography sx={{ direction: 'rtl', fontWeight: 'bold', fontSize: '20px' }}>
+                      מועד יום מיון (ניתן לבחור את שני התאריכים):
                     </Typography>
-                  </Container>
+                    <Container
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Checkbox
+                        defaultChecked={false}
+                        onClick={() => {
+                          setCheckBoxes({ ...checkBoxes, first: !checkBoxes.first });
+                        }}
+                        sx={{ color: 'white' }}
+                      />
+                      <Typography >
+                        10.11.2024
+                      </Typography>
+                    </Container>
+                    <Container
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '30px',
+                      }}
+                    >
+                      <Checkbox
+                        defaultChecked={false}
+                        onClick={() => { setCheckBoxes({ ...checkBoxes, second: !checkBoxes.second }); }}
+                        sx={{ color: 'white' }}
+                      />
+                      <Typography >
+                        14.11.2024
+                      </Typography>
+                    </Container>
+                    <Container
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row-reverse',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '30px',
+                      }}
+                    >
+                      <Checkbox
+                        defaultChecked={rules ? true : false}
+                        onClick={() => {
+                          setRules((prev) => !prev);
+                          setOpenRulesModal(false);
+                        }}
+                        sx={{ color: 'white' }}
+                      />
+                      <Typography >
+                        אני מאשר\ת את תנאי{' '}
+                        <span className={css['terms']} onClick={() => setOpenRulesModal((prev) => !prev)}>
+                          התקנון
+                        </span>
+                      </Typography>
+                    </Container>
+                  </Box>
+
                   {rules && (
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
                       <ArrowButton disabled={!rules} onClick={onSignupHandler}>
@@ -306,7 +389,7 @@ const SignUpPage = () => {
           </>)}
         </div>
       </Container>
-    </EntranceAnimation>
+    </EntranceAnimation >
   );
 };
 

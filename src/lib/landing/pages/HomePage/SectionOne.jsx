@@ -60,7 +60,7 @@ const SectionOne = () => {
         <Grid container gap={{ xs: 2, md: 4 }} justifyContent={'center'}>
           {typesCards.map((card, index) => {
             return (
-              <Grid key={card.id} item xs={12} md={3} lg={2}>
+              <Grid key={card.id} item xs={12} md={3} lg={2} >
                 <EntranceAnimation animationDelay={index * 0.2}>
                   <LangCard {...card} />
                 </EntranceAnimation>
