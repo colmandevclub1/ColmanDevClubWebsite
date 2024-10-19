@@ -18,7 +18,7 @@ const LangCard = ({ link, icon, color, title, description }) => {
           {title}
         </Typography>
       </Stack>
-      <Typography variant="body1" sx={{ direction: 'rtl', height: '2rem' }}>
+      <Typography variant="body1" sx={{ direction: 'rtl', height: {lg: '3rem', xs: '2rem'} }}>
         {description}
       </Typography>
       <Box style={{ width: '100%' }}>

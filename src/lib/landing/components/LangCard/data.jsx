@@ -4,7 +4,7 @@ export const typesCards = [
   {
     id: 1,
     title: 'HTML',
-    description: 'שפת הבסיס לבניית כל אתר - למה היא כל כך חשובה?',
+    description: 'שפת הבסיס לבניית כל אתר - למה היא כל כך חשובה? ',
     icon: faHtml5,
     color: '#E44D26',
     link: 'https://www.youtube.com/watch?v=UB1O30fR-EE',
