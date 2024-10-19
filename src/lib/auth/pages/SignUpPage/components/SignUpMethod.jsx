@@ -1,10 +1,12 @@
 import { EmailRounded } from '@mui/icons-material';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
-import { Button, Card, Stack } from '@mui/material';
+import { Button, Card, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, facebookProvider } from 'src/config/firebase-config';
 
 const SignUpMethod = ({ setMethodClicked, setProfilePic, setEmail, setName, setFormValues }) => {
+    const theme = useTheme();
+    const isLgOrBigger = useMediaQuery(theme.breakpoints.up('lg'));
 
     const handleFacebookSignIn = async () => {
         try {
@@ -25,11 +27,11 @@ const SignUpMethod = ({ setMethodClicked, setProfilePic, setEmail, setName, setF
         finally {
             setMethodClicked(true);
         }
-    }
+    };
 
     return (
-        <Card variant="filled" sx={{ height: '30svh', width: '35svw' }}>
-            <Stack p={5} gap={5}>
+        <Card variant="filled" sx={{ height: isLgOrBigger ? '30svh' : '100%', width: isLgOrBigger ? '35svw' : '90%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <Stack p={isLgOrBigger ? 5 : 1} gap={5}>
                 <Button
                     variant="outlined"
                     endIcon={<FacebookRoundedIcon />}
@@ -49,7 +51,7 @@ const SignUpMethod = ({ setMethodClicked, setProfilePic, setEmail, setName, setF
                     Submit using Email
                 </Button>
             </Stack>
-        </Card >
+        </Card>
     );
 };
 

@@ -1,16 +1,17 @@
+import { Box, Checkbox, Container, Grid, Typography } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import * as React from 'react';
 import { useNavigate } from 'react-router';
-import { Box, Checkbox, Container, Grid, Typography } from '@mui/material';
-import css from './style.module.css';
-import FormInputField from 'src/ui/FormInputField';
-import FormSelectField from 'src/ui/FormSelectField';
-import { allRules, errorMessages, labels } from 'src/data';
 import { EntranceAnimation } from 'src/animation';
-import { ArrowButton, TransitionsModal } from 'src/ui';
-import SignUpMethod from './components/SignUpMethod';
-import Avatar from '@mui/material/Avatar';
+import { allRules, errorMessages, labels } from 'src/data';
 import { useCreateUser } from 'src/hooks/firebase.hooks';
 import { fetchData } from 'src/hooks/useFirestoreFetch';
+import { ArrowButton, TransitionsModal } from 'src/ui';
+import FormInputField from 'src/ui/FormInputField';
+import FormSelectField from 'src/ui/FormSelectField';
+import SignUpMethod from './components/SignUpMethod';
+import css from './style.module.css';
 
 const FIELDS_MAP = {
   TextField: FormInputField,
@@ -27,8 +28,11 @@ const SignUpPage = () => {
   const [rules, setRules] = React.useState(false);
   const [methodClicked, setMethodClicked] = React.useState(false);
   const [profilePic, setProfilePic] = React.useState(null);
+  const [profilePicPreview, setProfilePicPreview] = React.useState(null);
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
+
+  const storage = getStorage();
 
   const onSignupHandler = async () => {
     const validationState = labels.reduce((obj, { key, validator }) => {
@@ -54,8 +58,16 @@ const SignUpPage = () => {
       navigate('/');
       return;
     }
+
+    let profilePicUrl = '';
+    if (profilePic) {
+      const storageRef = ref(storage, `profilePics/${profilePic.name}`);
+      await uploadBytes(storageRef, profilePic);
+      profilePicUrl = await getDownloadURL(storageRef);
+    }
+
     setOpenModal(true);
-    const newUser = { ...formValues, date: new Date().toLocaleDateString() };
+    const newUser = { ...formValues, profilePic: profilePicUrl, date: new Date().toLocaleDateString() };
     createUser.mutate(newUser);
   };
 
@@ -69,8 +81,10 @@ const SignUpPage = () => {
 
   const handleUploadClick = (event) => {
     const file = event.target.files[0];
+    console.log(file);
     if (file) {
       setProfilePic(file);
+      setProfilePicPreview(URL.createObjectURL(file));
     }
   };
 
@@ -123,7 +137,7 @@ const SignUpPage = () => {
                 justifyContent="center"
                 marginBottom={7}
                 marginTop={2}>
-                <Avatar sx={{ width: 150, height: 150, marginBottom: '15px', bgcolor: "grey" }} src={profilePic}>
+                <Avatar sx={{ width: 150, height: 150, marginBottom: '15px', bgcolor: "grey" }} src={profilePicPreview}>
                 </Avatar>
                 <Box
                   component="label"
