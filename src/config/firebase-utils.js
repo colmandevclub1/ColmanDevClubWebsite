@@ -1,23 +1,40 @@
-import { addDoc, collection, getDocs } from 'firebase/firestore';
-import { db } from './firebase-config';
+import { collection, getDocs } from 'firebase/firestore';
+import { auth, db } from './firebase-config';
+import { createUserWithEmailAndPassword, updateProfile, deleteUser, signInWithEmailAndPassword } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
-export const addUser = async (user) => {
+export const signupWithFirebase = async ({ email, password, displayName, photoURL }) => {
   try {
-    // const userWithoutPassword = { ...user };
-    // delete userWithoutPassword.password;
-    const docRef = await addDoc(collection(db, 'users'), user);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await updateProfile(user, {
+      displayName,
+      photoURL,
+    });
+    return user;
   } catch (e) {
-    //TODO : send to Google Analytics an event with the user.
-    console.error('Error adding document: ', e);
+    console.error('Error in signupWithFirebase: ', e);
+    toast.error(e.message);
   }
 };
 
-export const addMemberToTeam = async (user) => {
+export const signInWithFirebase = async ({ email, password }) => {
   try {
-    const docRef = await addDoc(collection(db, 'team'), user);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    return user;
   } catch (e) {
-    //TODO : send to Google Analytics an event with the user.
-    console.error('Error adding document: ', e);
+    console.error('Error in signInWithFirebase: ', e);
+    toast.error(e.message);
+  }
+};
+
+export const deleteUserFromFirebase = async (user) => {
+  try {
+    await deleteUser(user);
+  } catch (e) {
+    console.error('Error in deleteUserFromFirebase: ', e);
+    toast.error(e.message);
   }
 };
 

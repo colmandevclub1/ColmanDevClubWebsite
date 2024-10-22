@@ -22,6 +22,7 @@ const SignInPage = () => {
 
     signInWithEmailAndPassword(auth, formValues.email, formValues.password)
       .then((userCredential) => {
+        console.log(userCredential.user);
         localStorage.setItem('userToken', JSON.stringify(userCredential._tokenResponse.idToken));
         navigate('/syllabus');
       })

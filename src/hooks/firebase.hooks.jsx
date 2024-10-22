@@ -7,7 +7,7 @@ export const useGetUsers = () => {
   return useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const querySnapshot = await getDocs(collection(db, 'users'));
+      const querySnapshot = await getDocs(collection(db, 'users-v2'));
       return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
     onError: () => {
