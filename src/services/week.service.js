@@ -1,11 +1,24 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from 'src/config/firebase-config';
+import { UserService } from './user.service';
+import UserWeekStats from 'src/classes/UserWeekStats';
+import { roles } from 'src/constants/roles';
 
 const create = async (newWeek) => {
-  console.log(newWeek);
   try {
     const week = await addDoc(collection(db, 'weeks'), newWeek);
+    const users = await UserService.getAll();
+    users
+      .filter((user) => user.role === roles.member)
+      .forEach(async (user) => {
+        const userWeekStats = new UserWeekStats({
+          weekRef: week.id,
+          userRef: user.id,
+          created_at: new Date(),
+        });
+        await UserWeekStats.create({ ...userWeekStats });
+      });
     return week;
   } catch (error) {
     toast.error(error.message);

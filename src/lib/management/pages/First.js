@@ -44,7 +44,7 @@ const First = () => {
   const handleCreateNewWeek = async () => {
     const week = new Week({
       title: 1,
-      subject: 'React',
+      subject: 'Introduction to Full Stack',
       programRef: '1',
       is_visible: true,
       exercise_link: [],
