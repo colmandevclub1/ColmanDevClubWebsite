@@ -49,7 +49,10 @@ const ProjectCard = ({ image_url, title, description, github_url, website_url, l
         <Typography variant="body1">{description}</Typography>
       </CardContent>
       <CardActions disableSpacing sx={{ gap: '5px', flexWrap: "wrap" }}>
-        {language && language.map((lang) => <Chip key={lang} label={<LanguageChip lang={lang}/>} />)}
+        <ExpandedList 
+          list={language} 
+          item={(lang) => <Chip key={lang} label={<LanguageChip lang={lang}/>} />} 
+        />
       </CardActions>
     </Card>
   );
