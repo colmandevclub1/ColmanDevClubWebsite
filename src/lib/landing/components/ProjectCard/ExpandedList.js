@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Box } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AppearanceAnimation, EntranceAnimation } from 'src/animation';
 
 const getMaxVisibleItems = (containerWidth) => {
   if (containerWidth < 300) return 1;  
@@ -37,48 +37,25 @@ export const ExpandedList = ({ list, item }) => {
   }, []);
 
 	const renderListItem = useCallback((listItem, index) => (
-    <Box key={index} component={motion.div} layout>
+		<EntranceAnimation animationDelay={0.2}>
       {item(listItem)}
-    </Box>
+		</EntranceAnimation>
   ), [item]);
 
 
   return (
     <Box ref={containerRef} display='flex' flexWrap='wrap' gap={1} sx={{ overflow: 'hidden', width: '100%'}}>
-			<AnimatePresence initial={false}>
-				<Box component={motion.div} layout display="flex" flexWrap="wrap" alignItems='center' gap={1}  >
+			<AppearanceAnimation >
+				<Box display="flex" flexWrap="wrap" alignItems='center' gap={1}  >
 					{visibleItems.map(renderListItem)}
-
-					{!expanded && remainingItems > 0 && (
-						<Box 
-							component={motion.div} 
-							layout 
-							initial={{ opacity: 0 }} 
-							animate={{ opacity: 1 }} 
-							exit={{ opacity: 0 }} 
-							onClick={() => setExpanded(true)} 
-							sx={{direction: 'ltr', cursor: 'pointer'}}
-						>
-							+{remainingItems} more
-						</Box>
-					)}
-
+					<Box 
+						onClick={() => setExpanded(prev => !prev)} 
+						sx={{direction: 'ltr', cursor: 'pointer'}}
+					>
+						{!expanded && remainingItems > 0  ? `+${remainingItems} more` : 'Show Less' }
+					</Box>
 				</Box>
-
-      {expanded && (
-				<Box 
-					component={motion.div}
-					initial={{ height: 0, opacity: 0 }}
-					animate={{ height: 'auto', opacity: 1 }}
-					exit={{ height: 0, opacity: 0 }}
-					transition={{ duration: 0.4 }}
-					onClick={() => setExpanded(false)} 
-					sx={{ direction: 'ltr', cursor: 'pointer', padding: '0 8px' }}
-				>
-					Show Less
-				</Box>
-      )}
-			</AnimatePresence>
+			</AppearanceAnimation>
     </Box>
   );
 };
