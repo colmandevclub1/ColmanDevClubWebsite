@@ -15,6 +15,7 @@ import {
 
 import { GitHub as GitHubIcon, Language as LanguageIcon } from '@mui/icons-material/';
 import { LanguageChip } from './LanguageChip';
+import { ExpandedList } from './ExpandedList';
 
 const ProjectCard = ({ image_url, title, description, github_url, website_url, language }) => {
   return (
@@ -49,7 +50,7 @@ const ProjectCard = ({ image_url, title, description, github_url, website_url, l
         <Typography variant="body1">{description}</Typography>
       </CardContent>
       <CardActions disableSpacing sx={{ gap: '5px', flexWrap: "wrap" }}>
-        <ExpandedList 
+        <ExpandedList
           list={language} 
           item={(lang) => <Chip key={lang} label={<LanguageChip lang={lang}/>} />} 
         />
