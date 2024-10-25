@@ -45,7 +45,7 @@ export const ExpandedList = ({ list, item }) => {
 
   return (
     <Box ref={containerRef} display='flex' flexWrap='wrap' gap={1} sx={{ overflow: 'hidden', width: '100%'}}>
-			<AppearanceAnimation >
+			<AppearanceAnimation sx={{width: '100%'}}>
 				<Box display="flex" flexWrap="wrap" alignItems='center' gap={1}  >
 					{visibleItems.map(renderListItem)}
 					<Box 
