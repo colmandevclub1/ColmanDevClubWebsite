@@ -108,7 +108,6 @@ const SignUpPage = () => {
 
   const handleUploadClick = (event) => {
     const file = event.target.files[0];
-    console.log(file);
     if (file) {
       setProfilePic(file);
       setProfilePicPreview(URL.createObjectURL(file));

@@ -38,7 +38,6 @@ const First = () => {
     });
 
     const user = await UserService.create(newUser);
-    console.log(user);
   };
 
   const handleCreateNewWeek = async () => {
@@ -56,7 +55,6 @@ const First = () => {
     });
 
     const weekData = await weekService.create({ ...week });
-    console.log(weekData);
   };
 
   return (
