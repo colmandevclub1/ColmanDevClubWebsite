@@ -36,7 +36,6 @@ const First = () => {
         test_day: new Date(),
       },
     });
-
     const user = await UserService.create(newUser);
   };
 

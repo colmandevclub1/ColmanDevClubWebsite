@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
 } from 'firebase/auth';
 import { auth } from 'src/config/firebase-config.js';
+import { roles } from 'src/constants/roles';
 
 const UserContext = createContext();
 
