@@ -270,7 +270,7 @@ const SignUpPage = () => {
                         fontWeight: 'bold',
                         marginRight: '1rem',
                       }}
-                      href="https://chat.whatsapp.com/BSs6DSDRUiW8UHe4ZfrABt"
+                      href={process.env.REACT_APP_WHATSAPP_GROUP}
                     >
                       לחץ כאן
                     </a>
