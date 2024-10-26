@@ -26,7 +26,7 @@ const ControlTable = (props) => {
           <TableHeader columns={columns} />
         </TableHead>
         <TableBody>
-          <TableBodyContent rows={rows} columns={columns} columnColorsMap={props.columnColorsMap} />
+          <TableBodyContent rows={rows} columns={columns} columnColorsMap={props.columnColorsMap} onChangeHandler={props.onChangeHandler}  />
         </TableBody>
       </Table>
     </TableContainer>

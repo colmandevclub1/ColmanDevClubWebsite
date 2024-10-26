@@ -38,11 +38,13 @@ export const generateColumns = (data, totalColCriteria) => {
           headerName: subKey,
           width: 60,
           type: subKey,
+          id:''
         }));
         columns.push({
           headerName: key,
           subColumns: subColumns,
           width: subColumns.reduce((sum, subCol) => sum + subCol.width, 0),
+          id:''
         });
       } else {
         columns.push({
@@ -50,6 +52,7 @@ export const generateColumns = (data, totalColCriteria) => {
           headerName: key,
           width: 80,
           type: key,
+          id:''
         });
       }
     }

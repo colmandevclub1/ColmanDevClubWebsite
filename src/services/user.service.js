@@ -1,4 +1,4 @@
-import { addDoc, collection, getDoc } from 'firebase/firestore';
+import { addDoc, collection, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { Validators } from './validators.service';
 import { toast } from 'react-toastify';
 import { db } from 'src/config/firebase-config';
@@ -90,7 +90,34 @@ const create = async ({
     await deleteUserFromFirebase(authUser);
   }
 };
+const getAllUsers = async () => {
+  try {
+    const userCollection = collection(db, 'users-v2');
+    const userSnapshot = await getDocs(userCollection);
+    const users = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return users;
+  } catch (error) {
+    console.error('Error fetching all users:', error);
+    toast.error('Failed to fetch users');
+  }
+};
+
+const getAllUsersByProgram = async (program) => {
+  try {
+    const userCollection = collection(db, 'users-v2');
+    const q = query(userCollection, where('appliciant_data.program', '==', program));
+    const userSnapshot = await getDocs(q);
+    const users = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return users;
+  } catch (error) {
+    console.error('Error fetching users by program:', error);
+    toast.error('Failed to fetch users by program');
+  }
+};
+
 
 export const UserService = {
   create,
+  getAllUsers,
+  getAllUsersByProgram,
 };

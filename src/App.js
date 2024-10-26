@@ -9,7 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
-const manage = false;
+const manage = true;
 
 const App = () => {
   return (
