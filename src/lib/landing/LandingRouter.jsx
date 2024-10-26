@@ -7,7 +7,7 @@ import SyllabusPage from './pages/SyllabusPage/SyllabusPage';
 import { Footer } from './components';
 import { SignInPage, SignUpPage } from '../auth/pages';
 import { AuthContextProvider } from '../auth/authContext';
-// import ProtectedRoute from 'src/utils/protectedRoutes';
+import ProtectedRoute from 'src/utils/protectedRoutes';
 
 
 const LandingRouter = () => {
@@ -20,7 +20,7 @@ const LandingRouter = () => {
           {/* an example of how to use the protected route */}
           {/* <Route path="/team" element={<ProtectedRoute><TeamPage /> </ProtectedRoute>} /> */}
           <Route path="/team" element={<TeamPage />} />
-          <Route path="/syllabus" element={<SyllabusPage />} />
+          <Route path="/syllabus" element={<ProtectedRoute><SyllabusPage /></ProtectedRoute>} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signin" element={<SignInPage />} />
         </Routes>
