@@ -9,6 +9,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { auth } from 'src/config/firebase-config';
 import { theme } from 'src/theme';
 import { TransitionsModal } from 'src/ui';
+import { UserAuth } from '../../authContext';
 
 const SignInPage = () => {
   const [formValues, setFormValues] = React.useState({});
@@ -16,13 +17,15 @@ const SignInPage = () => {
   const [emailSent, setEmailSent] = React.useState(false);
   const [resetEmailValue, setResetEmailValue] = React.useState('');
   const [error, setError] = React.useState(false);
+  const { googleSignIn } = UserAuth();
   const navigate = useNavigate();
+
+  //TODO: use the auth context
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     signInWithEmailAndPassword(auth, formValues.email, formValues.password)
       .then((userCredential) => {
-        console.log(userCredential.user);
         localStorage.setItem('userToken', JSON.stringify(userCredential._tokenResponse.idToken));
         navigate('/syllabus');
       })
@@ -92,6 +95,9 @@ const SignInPage = () => {
             )}
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
+            </Button>
+            <Button type="submit" fullWidth variant="contained" onClick={googleSignIn}>
+              Sign In with Google
             </Button>
             <Grid container>
               <Grid item xs>

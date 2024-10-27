@@ -61,20 +61,19 @@ const MobileNavbar = () => {
             Logout
           </MenuItem>
         )}
-
         {!user && (
-          <>
-            <NavLink to="/signin" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">Sign In</Typography>
-              </MenuItem>
-            </NavLink>
-            <NavLink to="/signup" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">Join Us</Typography>
-              </MenuItem>
-            </NavLink>
-          </>
+          <NavLink to="/signin" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <MenuItem onClick={handleCloseNavMenu}>
+              <Typography textAlign="center">Sign In</Typography>
+            </MenuItem>
+          </NavLink>
+        )}
+        {!user && (
+          <NavLink to="/signup" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <MenuItem onClick={handleCloseNavMenu}>
+              <Typography textAlign="center">Join Us</Typography>
+            </MenuItem>
+          </NavLink>
         )}
       </Menu>
       <LogoAndTitle />
