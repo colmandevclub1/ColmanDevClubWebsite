@@ -37,7 +37,7 @@ export const ExpandedList = ({ list, item }) => {
   }, []);
 
 	const renderListItem = useCallback((listItem, index) => (
-		<EntranceAnimation animationDelay={0.2}>
+		<EntranceAnimation animationDelay={0.2} key={`${listItem}${index}`}>
       {item(listItem)}
 		</EntranceAnimation>
   ), [item]);
