@@ -4,10 +4,12 @@ import { pages } from './defintions';
 import LogoAndTitle from './LogoAndTitle';
 import MobileNavbar from './MobileNavbar';
 import NavbarProfile from './NavbarProfile';
+import { UserAuth } from 'src/lib/auth/authContext';
 
 const Navbar = () => {
   const { pathname } = useLocation();
-
+  const { user } = UserAuth();
+  
   return (
     <AppBar position="sticky" color="secondary" sx={{ borderBottom: '1px solid #1F1F53' }}>
       <Toolbar
@@ -24,7 +26,7 @@ const Navbar = () => {
         >
           <LogoAndTitle />
           {pages.map((page) => (
-            <Button
+            ((page?.requiredAuth && user) || (!page?.requiredAuth)) && <Button
               key={page.title}
               LinkComponent={NavLink}
               to={page.path}
