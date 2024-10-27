@@ -45,6 +45,7 @@ const MobileNavbar = () => {
         onClose={handleCloseNavMenu}
       >
         {pages.map((page) => (
+          ((page?.requiredAuth && user) || (!page?.requiredAuth)) && 
           <NavLink key={page.title} to={page.path} style={{ textDecoration: 'none', color: 'inherit' }}>
             <MenuItem onClick={handleCloseNavMenu}>
               <Typography textAlign="center">{page.title}</Typography>
