@@ -1,28 +1,16 @@
 import { EmailRounded } from '@mui/icons-material';
-import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
-import { Button, Card, Stack, useMediaQuery, useTheme } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Button, Card, Stack, Typography } from '@mui/material';
 import { signInWithPopup } from 'firebase/auth';
-import { auth, facebookProvider, googleProvider } from 'src/config/firebase-config';
+import { auth, googleProvider } from 'src/config/firebase-config';
 
-const SignUpMethod = ({ setMethodClicked, setProfilePic, setEmail, setName, setFormValues }) => {
-  const theme = useTheme();
-  const isLgOrBigger = useMediaQuery(theme.breakpoints.up('lg'));
-
-  const handleFacebookSignIn = async () => {
+const SignUpMethod = ({ setMethodClicked, setProfilePic, setEmail, setName }) => {
+  const handleGoogleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log(result);
-      //   setName(result.user['displayName']);
-      //   setEmail(result.user['email']);
-      //   setProfilePic(result.user['photoURL']);
-      //   setFormValues((prev) => {
-      //     return {
-      //       ...prev,
-      //       fullName: result.user['displayName'],
-      //       email: result.user['email'],
-      //       profilePic: result.user['photoURL'],
-      //     };
-      //   });
+      const { user } = await signInWithPopup(auth, googleProvider);
+      setEmail(user.email);
+      setName(user.displayName);
+      setProfilePic(user.photoURL);
     } catch (error) {
       console.log(error);
     } finally {
@@ -34,23 +22,28 @@ const SignUpMethod = ({ setMethodClicked, setProfilePic, setEmail, setName, setF
     <Card
       variant="filled"
       sx={{
-        height: isLgOrBigger ? '30svh' : '100%',
-        width: isLgOrBigger ? '35svw' : '90%',
+        height: { xs: '100%', lg: '30svh' },
+        width: { xs: '100%', lg: '35svw' },
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
       }}
     >
-      <Stack p={isLgOrBigger ? 5 : 1} gap={5}>
-        <Button
-          variant="outlined"
-          endIcon={<FacebookRoundedIcon />}
-          fullWidth
-          sx={{ justifyContent: 'space-between' }}
-          onClick={() => handleFacebookSignIn()}
-        >
-          Submit using Facebook
-        </Button>
+      <Stack p={{ xs: 5, lg: 1 }} gap={5}>
+        <Stack>
+          <Typography variant="caption" color={'primary'} textAlign={'end'}>
+            *Recommended
+          </Typography>
+          <Button
+            variant="outlined"
+            endIcon={<GoogleIcon />}
+            fullWidth
+            sx={{ justifyContent: 'space-between' }}
+            onClick={() => handleGoogleSignIn()}
+          >
+            Submit using Google
+          </Button>
+        </Stack>
         <Button
           variant="outlined"
           fullWidth
