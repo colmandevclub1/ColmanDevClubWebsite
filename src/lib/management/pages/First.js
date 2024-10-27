@@ -37,8 +37,8 @@ const First = () => {
       },
     });
 
-    const user = await UserService.create(newUser);
-    console.log(user);
+    const user = await UserService.create({ ...newUser });
+    console.log({ ...user });
   };
 
   const handleCreateNewWeek = async () => {

@@ -29,7 +29,7 @@ const SectionFour = () => {
               infinite: true,
               responsive: [
                 {
-                  breakpoint: 800,
+                  breakpoint: 900,
                   settings: { slidesToScroll: 1, slidesToShow: 2 },
                 },
                 {
