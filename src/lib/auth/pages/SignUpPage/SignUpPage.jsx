@@ -1,19 +1,21 @@
-import { Box, Checkbox, CircularProgress, Container, Grid, Typography } from '@mui/material';
+import { Box, Checkbox, Container, Grid, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 import { EntranceAnimation } from 'src/animation';
+import UserDoc from 'src/classes/User.class';
+import { deleteUserFromFirebase, signupWithFirebase } from 'src/config/firebase-utils';
+import { roles } from 'src/constants/roles';
 import { allRules, errorMessages, labels } from 'src/data';
-import { useCreateUser } from 'src/hooks/firebase.hooks';
-import { fetchData } from 'src/hooks/useFirestoreFetch';
+import { UserService } from 'src/services/user.service';
 import { ArrowButton, TransitionsModal } from 'src/ui';
 import FormInputField from 'src/ui/FormInputField';
 import FormSelectField from 'src/ui/FormSelectField';
+import Loader from './components/Loader';
 import SignUpMethod from './components/SignUpMethod';
 import css from './style.module.css';
-import { toast } from 'react-toastify';
-import Loader from './components/Loader';
 
 const FIELDS_MAP = {
   TextField: FormInputField,
@@ -22,14 +24,14 @@ const FIELDS_MAP = {
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const createUser = useCreateUser();
+
   const [openModal, setOpenModal] = React.useState(false);
-  const [formValues, setFormValues] = React.useState({});
-  const [validationErrors, setValidationErrors] = React.useState({});
-  const [openRulesModal, setOpenRulesModal] = React.useState(false);
   const [loader, setLoader] = React.useState(false);
-  const [rules, setRules] = React.useState(false);
   const [methodClicked, setMethodClicked] = React.useState(false);
+
+  const [formValues, setFormValues] = React.useState({});
+  const [openRulesModal, setOpenRulesModal] = React.useState(false);
+  const [rules, setRules] = React.useState(false);
   const [profilePic, setProfilePic] = React.useState(null);
   const [profilePicPreview, setProfilePicPreview] = React.useState(null);
   const [email, setEmail] = React.useState('');
@@ -39,65 +41,96 @@ const SignUpPage = () => {
     second: false,
   });
 
+  const [validationErrors, setValidationErrors] = React.useState({});
+  const [userCredential, setUserCredential] = React.useState(null);
+
   const storage = getStorage();
 
   const onSignupHandler = async () => {
-    if (!checkBoxes.first && !checkBoxes.second) {
-      toast.error('יש לבחור תאריך מיון');
-      return;
-    }
-
-    const validationState = labels.reduce((obj, { key, validator }) => {
-      obj[key] = !validator(formValues[key]);
-      return obj;
-    }, {});
-
-    setValidationErrors(validationState);
-
-    if (Object.keys(validationState).length === 0) return;
-    for (const key in validationState) {
-      if (key === 'experienceDetails' && formValues['experience'] !== 'כן') {
-        validationState[key] = validationState['experience'];
-      }
-
-      if (validationState[key]) {
+    try {
+      if (!checkBoxes.first && !checkBoxes.second) {
+        toast.error('יש לבחור תאריך מיון');
         return;
       }
-    }
-    if (!rules) return;
-    if ((await fetchData('users')).find((user) => user.formValues?.email === formValues['email'])) {
-      alert('משתמש קיים במערכת');
-      navigate('/');
-      return;
-    }
 
-    setLoader(true);
-    let profilePicUrl = '';
-    if (profilePic) {
-      const storageRef = ref(storage, `profilePics/${profilePic.name}`);
-      await uploadBytes(storageRef, profilePic);
-      profilePicUrl = await getDownloadURL(storageRef);
-    }
-    setLoader(false);
+      const validationState = labels.reduce((obj, { key, validator }) => {
+        obj[key] = !validator(formValues[key]);
+        return obj;
+      }, {});
 
-    //TODO: @OptimaLPro - this need to be an array of dates, not a string.
-    let sortingDates = '';
-    if (checkBoxes.first && checkBoxes.second) {
-      sortingDates = '10.11.2024, 14.11.2024';
-    } else if (checkBoxes.first) {
-      sortingDates = '10.11.2024';
-    } else {
-      sortingDates = '14.11.2024';
-    }
+      setValidationErrors(validationState);
 
-    setOpenModal(true);
-    const newUser = {
-      ...formValues,
-      profilePic: profilePicUrl,
-      sortingDate: sortingDates,
-      date: new Date().toLocaleDateString(),
-    };
-    createUser.mutate(newUser);
+      if (Object.keys(validationState).length === 0) return;
+      for (const key in validationState) {
+        if (key === 'experienceDetails' && formValues['experience'] !== 'כן') {
+          validationState[key] = validationState['experience'];
+        }
+
+        if (validationState[key]) {
+          return;
+        }
+      }
+      if (!rules) return;
+
+      //TODO: @OptimaLPro - this need to be an array of dates, not a string.
+      let sortingDates = '';
+      if (checkBoxes.first && checkBoxes.second) {
+        sortingDates = '10.11.2024, 14.11.2024';
+      } else if (checkBoxes.first) {
+        sortingDates = '10.11.2024';
+      } else {
+        sortingDates = '14.11.2024';
+      }
+
+      let authUser = userCredential;
+
+      if (!authUser) {
+        setLoader(true);
+        let profilePicUrl = '';
+        if (profilePic) {
+          const storageRef = ref(storage, `profilePics/${profilePic.name}`);
+          await uploadBytes(storageRef, profilePic);
+          profilePicUrl = await getDownloadURL(storageRef);
+        }
+        setLoader(false);
+
+        const authUser2 = await signupWithFirebase({
+          email: formValues.email,
+          password: formValues.password ?? '123456',
+          displayName: `${formValues.fullName} ${formValues.fullName}`,
+          photoURL: profilePicUrl,
+        });
+        authUser = authUser2;
+        console.log({ authUser2 });
+
+        if (!authUser2) throw new Error('Failed to create user in firebase');
+      }
+
+      console.log(authUser);
+
+      const userDocData = new UserDoc({
+        first_name: formValues.fullName,
+        last_name: formValues.fullName,
+        card_id: formValues.id,
+        phone_number: formValues.phoneNumber,
+        role: roles.admin,
+        appliciant_data: {
+          field_of_study: formValues.fieldOfStudy,
+          school_year: formValues.schoolYear,
+          program: formValues.program,
+          experience: formValues.experience,
+          experience_details: formValues.experienceDetails ?? '',
+          test_day: sortingDates, //need to be an array of dates
+        },
+      });
+
+      await UserService.create({ userCredential: authUser, ...userDocData });
+      setOpenModal(true); // TODO: add button to go to home page
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+      await deleteUserFromFirebase(userCredential);
+    }
   };
 
   const inputHandler = (validator, key, value) => {
@@ -110,10 +143,9 @@ const SignUpPage = () => {
 
   const handleUploadClick = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      setProfilePic(file);
-      setProfilePicPreview(URL.createObjectURL(file));
-    }
+    if (!file) return;
+    setProfilePic(file);
+    setProfilePicPreview(URL.createObjectURL(file));
   };
 
   const goHome = () => {
@@ -145,10 +177,9 @@ const SignUpPage = () => {
           {!methodClicked && (
             <SignUpMethod
               setMethodClicked={setMethodClicked}
-              setProfilePic={setProfilePic}
               setEmail={setEmail}
               setName={setName}
-              setFormValues={setFormValues}
+              setProfilePicPreview={setProfilePicPreview}
             />
           )}
         </div>
@@ -177,8 +208,8 @@ const SignUpPage = () => {
                 >
                   <Avatar
                     sx={{ width: 150, height: 150, marginBottom: '15px', bgcolor: 'grey' }}
-                    src={profilePic ?? profilePicPreview}
-                  ></Avatar>
+                    src={profilePicPreview}
+                  />
                   <Box
                     component="label"
                     sx={{
@@ -226,8 +257,8 @@ const SignUpPage = () => {
                             }}
                             options={options}
                             label={label}
-                            email={email}
-                            name={name}
+                            email={email ?? userCredential.email}
+                            name={name ?? userCredential.displayName}
                             onChange={(event) => {
                               setFormValues((prev) => {
                                 return { ...prev, [key]: event.target.value };
@@ -376,13 +407,11 @@ const SignUpPage = () => {
                       </Container>
                     </Box>
 
-                    {rules && (
-                      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
-                        <ArrowButton disabled={!rules} onClick={onSignupHandler}>
-                          Submit
-                        </ArrowButton>
-                      </div>
-                    )}
+                    {/* {rules && ( */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
+                      <ArrowButton onClick={onSignupHandler}>Submit</ArrowButton>
+                    </div>
+                    {/* )} */}
                   </Grid>
                 </Grid>
               </Box>

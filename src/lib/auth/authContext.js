@@ -9,6 +9,7 @@ import {
 } from 'firebase/auth';
 import { auth } from 'src/config/firebase-config.js';
 import { roles } from 'src/constants/roles';
+import { UserService } from 'src/services/user.service';
 
 const UserContext = createContext();
 
@@ -71,6 +72,7 @@ export const AuthContextProvider = ({ children }) => {
       setUser(currentUser);
       setIsLoading(false);
     });
+    // const userData = await UserService.
     return () => {
       unsubscribe();
     };
