@@ -47,15 +47,19 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setIsLoading(false);
-    });
-    // const userData = await UserService.
-    return () => {
-      unsubscribe();
+    const tamirFunction = async () => {
+      await onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+        setIsLoading(false);
+      });
+
+      const userData = await UserService.getById(user.uid);
+      setUser({ ...user, ...userData });
+      setIsLoading(true);
     };
+
+    tamirFunction();
+    return () => {};
   }, []);
 
   return (

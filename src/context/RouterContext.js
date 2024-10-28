@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import LandingRouter from 'src/lib/landing/LandingRouter';
 import ManageRouter from 'src/lib/management/router';
+import AdminProtectedRoute from 'src/utils/AdminProtectedRoutes';
 
 const RouterContext = createContext();
 
@@ -11,7 +12,11 @@ export const routers = {
   },
   management: {
     name: 'management',
-    router: <ManageRouter />,
+    router: (
+      <AdminProtectedRoute>
+        <ManageRouter />,
+      </AdminProtectedRoute>
+    ),
   },
 };
 
