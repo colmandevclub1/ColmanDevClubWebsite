@@ -4,13 +4,13 @@ import { Button, Card, Stack, Typography } from '@mui/material';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from 'src/config/firebase-config';
 
-const SignUpMethod = ({ setMethodClicked, setProfilePic, setEmail, setName }) => {
+const SignUpMethod = ({ setMethodClicked, setEmail, setName, setProfilePicPreview }) => {
   const handleGoogleSignIn = async () => {
     try {
       const { user } = await signInWithPopup(auth, googleProvider);
       setEmail(user.email);
       setName(user.displayName);
-      setProfilePic(user.photoURL);
+      setProfilePicPreview(user.photoURL);
     } catch (error) {
       console.log(error);
     } finally {

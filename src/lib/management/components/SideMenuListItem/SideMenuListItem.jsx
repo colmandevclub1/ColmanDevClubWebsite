@@ -2,9 +2,9 @@ import React from 'react';
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-const SideMenuListItem = ({ text, icon, open, link }) => {
+const SideMenuListItem = ({ text, icon, open, link, onClick }) => {
   return (
-    <Link to={link} style={{ textDecoration: 'none' }}>
+    <Link to={link} style={{ textDecoration: 'none' }} onClick={onClick}>
       <ListItem disablePadding sx={{ display: 'block' }}>
         <ListItemButton
           sx={[{ minHeight: 48, px: 2.5 }, open ? { justifyContent: 'initial' } : { justifyContent: 'center' }]}
