@@ -73,6 +73,7 @@ const SignUpPage = () => {
       if (!rules) return;
 
       //TODO: @OptimaLPro - this need to be an array of dates, not a string.
+
       let sortingDates = '';
       if (checkBoxes.first && checkBoxes.second) {
         sortingDates = '10.11.2024, 14.11.2024';
