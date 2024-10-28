@@ -10,6 +10,7 @@ import { auth } from 'src/config/firebase-config';
 import { theme } from 'src/theme';
 import { TransitionsModal } from 'src/ui';
 import { UserAuth } from '../../authContext';
+import GoogleIcon from '@mui/icons-material/Google';
 
 const SignInPage = () => {
   const [formValues, setFormValues] = React.useState({});
@@ -34,6 +35,11 @@ const SignInPage = () => {
       });
   };
 
+  const handleGoogleSignIn = async (event) => {
+    event.preventDefault();
+    await googleSignIn()
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -52,7 +58,7 @@ const SignInPage = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, gap: "8px", pb: "8px" }}>
             <TextField
               margin="normal"
               required
@@ -93,60 +99,30 @@ const SignInPage = () => {
                 {'Email or password is incorrect'}
               </Typography>
             )}
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign In
-            </Button>
-            <Button type="submit" fullWidth variant="contained" onClick={googleSignIn}>
-              Sign In with Google
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  <Typography
-                    onClick={() => {
-                      setOpenModal(true);
-                    }}
-                  >
-                    Forgot password?
-                  </Typography>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  <Typography>Don't have an account? Sign Up</Typography>
-                </Link>
-              </Grid>
-            </Grid>
-            <TransitionsModal
-              openModal={openModal}
+            <Box display='flex' alignItems="center" justifyContent="space-between" gap="32px" >
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >
+                Sign In
+              </Button>
+              
+                <Button 
+                  type="submit" 
+                  variant="outlined"
+                  onClick={handleGoogleSignIn} 
+                  sx={{
+                    width: "65px", height: "65px", borderRadius: "50%",
+                    display: "flex", justifyContent: "center", alignItems: "center"}} >
+                  <GoogleIcon />
+                  
+                </Button>
+            </Box>
+            <SignInActionButtons openModal={openModal}
               setOpenModal={setOpenModal}
-              closeOnOverlay={true}
-              btnText="Reset Password"
-              btnOnClick={async () => {
-                //TODO -> need to fix. not working
-                if (resetEmailValue !== '') {
-                  setEmailSent(true);
-                  await sendPasswordResetEmail(auth, resetEmailValue);
-                  console.log('Password reset email sent');
-                  setOpenModal(false);
-                }
-              }}
-            >
-              {!emailSent ? (
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="email"
-                  label="Email Address"
-                  type="email"
-                  id="emailReset"
-                  onChange={(e) => setResetEmailValue(e.target.value)}
-                />
-              ) : (
-                <Typography>{'Password reset email sent'}</Typography>
-              )}
-            </TransitionsModal>
+              emailSent={emailSent}
+              resetEmailValue={resetEmailValue}
+              setEmailSent={setEmailSent}
+              setResetEmailValue={setResetEmailValue}
+              sendPasswordResetEmail={sendPasswordResetEmail}
+            />
           </Box>
         </Box>
       </Container>
@@ -155,3 +131,58 @@ const SignInPage = () => {
 };
 
 export default SignInPage;
+
+
+const SignInActionButtons = ({openModal, setOpenModal, emailSent, resetEmailValue, setEmailSent, setResetEmailValue, sendPasswordResetEmail}) => {
+  return (
+    <> 
+      <Grid container>
+        <Grid item xs>
+          <Link href="#" variant="body2">
+            <Typography
+              onClick={() => {
+                setOpenModal(true);
+              }}
+            >
+              Forgot password?
+            </Typography>
+          </Link>
+        </Grid>
+        <Grid item>
+          <Link href="/signup" variant="body2">
+            <Typography>Don't have an account? Sign Up</Typography>
+          </Link>
+        </Grid>
+      </Grid>
+      <TransitionsModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        closeOnOverlay={true}
+        btnText="Reset Password"
+        btnOnClick={async () => {
+          if (resetEmailValue !== '') {
+            setEmailSent(true);
+            await sendPasswordResetEmail(auth, resetEmailValue);
+            console.log('Password reset email sent');
+            setOpenModal(false);
+          }
+        }}
+      >
+        {!emailSent ? (
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="email"
+            label="Email Address"
+            type="email"
+            id="emailReset"
+            onChange={(e) => setResetEmailValue(e.target.value)}
+          />
+        ) : (
+          <Typography>{'Password reset email sent'}</Typography>
+        )}
+      </TransitionsModal>
+    </>
+  )
+}
