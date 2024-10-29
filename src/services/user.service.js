@@ -2,9 +2,23 @@ import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from 'src/config/firebase-config';
 
-const validateApplicantData = ({ field_of_study, school_year, program, experience, experience_details, test_day }) => {
+const validateApplicantData = ({
+  field_of_study,
+  school_year,
+  program,
+  experience,
+  experience_details,
+  test_day,
+}) => {
   try {
-    if (!field_of_study || !school_year || !program || !experience || !experience_details || !test_day)
+    if (
+      !field_of_study ||
+      !school_year ||
+      !program ||
+      !experience ||
+      !experience_details ||
+      !test_day
+    )
       throw new Error('Missing required fields');
     return true;
   } catch (error) {
@@ -12,7 +26,14 @@ const validateApplicantData = ({ field_of_study, school_year, program, experienc
   }
 };
 
-const create = async ({ userCredential, first_name, last_name, role, card_id, appliciant_data }) => {
+const create = async ({
+  userCredential,
+  first_name,
+  last_name,
+  role,
+  card_id,
+  appliciant_data,
+}) => {
   console.log(userCredential);
   const userDocRef = doc(db, 'users-v2', userCredential.uid);
   const userDoc = {

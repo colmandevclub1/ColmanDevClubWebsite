@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from 'firebase/auth';
 import { auth } from 'src/config/firebase-config.js';
 import { roles } from 'src/constants/roles';
 import { UserService } from 'src/services/user.service';
@@ -13,7 +18,11 @@ export const AuthContextProvider = ({ children }) => {
   const createUser = async (email, password) => {
     setIsLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       return userCredential;
     } catch (error) {
       console.error('Error creating user:', error.message);
@@ -25,7 +34,11 @@ export const AuthContextProvider = ({ children }) => {
   const signIn = async (email, password) => {
     setIsLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       return userCredential;
     } catch (error) {
       console.error('Error signing in:', error.message);
@@ -47,23 +60,33 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const tamirFunction = async () => {
-      await onAuthStateChanged(auth, (currentUser) => {
-        setUser(currentUser);
-        setIsLoading(false);
-      });
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        console.log({ currentUser: currentUser.uid });
+        try {
+          const userData = await UserService.getById(currentUser.uid);
+          // TODO bar - check why this return as null
+          console.log({ userData });
+          setUser({ ...currentUser, ...userData });
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
 
-      const userData = await UserService.getById(user.uid);
-      setUser({ ...user, ...userData });
-      setIsLoading(true);
-    };
-
-    tamirFunction();
-    return () => {};
+    // Clean up subscription
+    return () => unsubscribe();
   }, []);
 
   return (
-    <UserContext.Provider value={{ createUser, user, logout, signIn, isLoading }}>{children}</UserContext.Provider>
+    <UserContext.Provider
+      value={{ createUser, user, logout, signIn, isLoading }}
+    >
+      {children}
+    </UserContext.Provider>
   );
 };
 
