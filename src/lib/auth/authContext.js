@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   GoogleAuthProvider,
+  deleteUser
 } from 'firebase/auth';
 import { auth } from 'src/config/firebase-config.js';
 import { roles } from 'src/constants/roles';
@@ -54,6 +55,16 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  const signInWithGoogleIfUserExist = async () => {
+    const userCredential = await googleSignIn();
+    const id = userCredential.user.uid
+    const user = await UserService.getById(id);
+    if (!user) {
+      await logout();
+      await deleteUser(userCredential.user);
+    }
+  }
+
   const logout = async () => {
     setIsLoading(true);
     try {
@@ -79,7 +90,15 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ createUser, user, logout, signIn, isLoading, googleSignIn }}>
+    <UserContext.Provider value={{ 
+      user, 
+      isLoading, 
+      createUser, 
+      logout, 
+      signIn, 
+      googleSignIn, 
+      signInWithGoogleIfUserExist, 
+    }}>
       {children}
     </UserContext.Provider>
   );

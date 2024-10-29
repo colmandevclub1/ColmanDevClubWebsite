@@ -71,4 +71,5 @@ const getByAuthId = async (auth_id) => {
 
 export const UserService = {
   create,
+  getById
 };

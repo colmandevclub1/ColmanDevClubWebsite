@@ -8,9 +8,9 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { auth } from 'src/config/firebase-config';
 import { theme } from 'src/theme';
-import { TransitionsModal } from 'src/ui';
 import { UserAuth } from '../../authContext';
 import GoogleIcon from '@mui/icons-material/Google';
+import { SignInActionButtons } from './SignInActionButtons';
 
 const SignInPage = () => {
   const [formValues, setFormValues] = React.useState({});
@@ -18,7 +18,7 @@ const SignInPage = () => {
   const [emailSent, setEmailSent] = React.useState(false);
   const [resetEmailValue, setResetEmailValue] = React.useState('');
   const [error, setError] = React.useState(false);
-  const { googleSignIn } = UserAuth();
+  const { signInWithGoogleIfUserExist } = UserAuth();
   const navigate = useNavigate();
 
   //TODO: use the auth context
@@ -37,7 +37,7 @@ const SignInPage = () => {
 
   const handleGoogleSignIn = async (event) => {
     event.preventDefault();
-    await googleSignIn()
+    await signInWithGoogleIfUserExist()
   }
 
   return (
@@ -110,12 +110,15 @@ const SignInPage = () => {
                   onClick={handleGoogleSignIn} 
                   sx={{
                     width: "65px", height: "65px", borderRadius: "50%",
-                    display: "flex", justifyContent: "center", alignItems: "center"}} >
+                    display: "flex", justifyContent: "center", alignItems: "center"
+                  }} >
                   <GoogleIcon />
                   
                 </Button>
             </Box>
-            <SignInActionButtons openModal={openModal}
+            <SignInActionButtons 
+              openModal={openModal}
+              auth={auth}
               setOpenModal={setOpenModal}
               emailSent={emailSent}
               resetEmailValue={resetEmailValue}
@@ -132,57 +135,3 @@ const SignInPage = () => {
 
 export default SignInPage;
 
-
-const SignInActionButtons = ({openModal, setOpenModal, emailSent, resetEmailValue, setEmailSent, setResetEmailValue, sendPasswordResetEmail}) => {
-  return (
-    <> 
-      <Grid container>
-        <Grid item xs>
-          <Link href="#" variant="body2">
-            <Typography
-              onClick={() => {
-                setOpenModal(true);
-              }}
-            >
-              Forgot password?
-            </Typography>
-          </Link>
-        </Grid>
-        <Grid item>
-          <Link href="/signup" variant="body2">
-            <Typography>Don't have an account? Sign Up</Typography>
-          </Link>
-        </Grid>
-      </Grid>
-      <TransitionsModal
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        closeOnOverlay={true}
-        btnText="Reset Password"
-        btnOnClick={async () => {
-          if (resetEmailValue !== '') {
-            setEmailSent(true);
-            await sendPasswordResetEmail(auth, resetEmailValue);
-            console.log('Password reset email sent');
-            setOpenModal(false);
-          }
-        }}
-      >
-        {!emailSent ? (
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="email"
-            label="Email Address"
-            type="email"
-            id="emailReset"
-            onChange={(e) => setResetEmailValue(e.target.value)}
-          />
-        ) : (
-          <Typography>{'Password reset email sent'}</Typography>
-        )}
-      </TransitionsModal>
-    </>
-  )
-}
