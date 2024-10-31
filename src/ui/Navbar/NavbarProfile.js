@@ -43,7 +43,7 @@ const NavbarProfile = () => {
 
   return (
     <Stack direction={'row'} alignItems={'center'} gap={3} bgcolor={'#1F1F53'} px={2} borderRadius={2}>
-      <Typography>{`Hello, ${user?.displayName}`}</Typography>
+      <Typography>{`Hello, ${user?.displayName?.split(" ")?.[0]}`}</Typography>
       <IconButton
         onClick={handleClick}
         aria-controls={open ? 'account-menu' : undefined}
