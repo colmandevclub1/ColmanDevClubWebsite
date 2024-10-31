@@ -39,7 +39,7 @@ const Navbar = () => {
             </Button>
           ))}
         </Toolbar>
-        <Button onClick={() => setCurrentRouter(routers.management)}>Dashboard</Button>
+        {/* <Button onClick={() => setCurrentRouter(routers.management)}>Dashboard</Button> */}
         <NavbarProfile />
       </Toolbar>
       <MobileNavbar />
