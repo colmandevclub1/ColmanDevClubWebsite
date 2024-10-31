@@ -35,7 +35,7 @@ const create = async ({ userCredential, first_name, last_name, role, card_id, ap
 
 const getById = async (id) => {
   try {
-    const userDocRef = await getDoc(collection(db, 'users-v2', id));
+    const userDocRef = doc(db, 'users-v2', id);
     const userDocSnap = await getDoc(userDocRef);
 
     if (userDocSnap.exists()) {
