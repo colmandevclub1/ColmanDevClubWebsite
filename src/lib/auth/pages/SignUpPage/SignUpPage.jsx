@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { EntranceAnimation } from 'src/animation';
 import UserDoc from 'src/classes/User.class';
-import { deleteUserFromFirebase, signupWithFirebase } from 'src/config/firebase-utils';
+import { deleteUserFromFirebase, signupWithFirebase, updateUser } from 'src/config/firebase-utils';
 import { roles } from 'src/constants/roles';
 import { allRules, errorMessages, labels } from 'src/data';
 import { UserService } from 'src/services/user.service';
@@ -16,6 +16,7 @@ import FormSelectField from 'src/ui/FormSelectField';
 import Loader from './components/Loader';
 import SignUpMethod from './components/SignUpMethod';
 import css from './style.module.css';
+import { UserAuth } from '../../authContext';
 
 const FIELDS_MAP = {
   TextField: FormInputField,
@@ -40,9 +41,8 @@ const SignUpPage = () => {
     first: false,
     second: false,
   });
-
+  const { user } = UserAuth();
   const [validationErrors, setValidationErrors] = React.useState({});
-  const [userCredential, setUserCredential] = React.useState(null);
 
   const storage = getStorage();
 
@@ -82,9 +82,15 @@ const SignUpPage = () => {
         sortingDates = '14.11.2024';
       }
 
-      let authUser = userCredential;
+      let authUser = user;
 
       if (!authUser) {
+        const newAuthUser = await signupWithFirebase({
+          email: formValues.email.trim(),
+          password: formValues.password?.trim() ?? '123456',
+        });
+       
+        // TODO: export to function
         setLoader(true);
         let profilePicUrl = '';
         if (profilePic) {
@@ -94,32 +100,30 @@ const SignUpPage = () => {
         }
         setLoader(false);
 
-        const authUser2 = await signupWithFirebase({
-          email: formValues.email,
-          password: formValues.password ?? '123456',
-          displayName: `${formValues.fullName} ${formValues.fullName}`,
+        await updateUser(newAuthUser, {
+          displayName: formValues.fullName?.trim(),
           photoURL: profilePicUrl,
         });
-        authUser = authUser2;
-        console.log({ authUser2 });
-
-        if (!authUser2) throw new Error('Failed to create user in firebase');
+        
+        authUser = newAuthUser;
+        if (!authUser) throw new Error('Failed to create user in firebase');
       }
+      
 
       console.log(authUser);
 
       const userDocData = new UserDoc({
-        first_name: formValues.fullName,
-        last_name: formValues.fullName,
-        card_id: formValues.id,
-        phone_number: formValues.phoneNumber,
-        role: roles.admin,
+        first_name: formValues.fullName.trim(),
+        last_name: formValues.fullName.trim(),
+        card_id: formValues.id.trim(),
+        phone_number: formValues.phoneNumber.trim(),
+        role: roles.applicant,
         appliciant_data: {
           field_of_study: formValues.fieldOfStudy,
           school_year: formValues.schoolYear,
           program: formValues.program,
           experience: formValues.experience,
-          experience_details: formValues.experienceDetails ?? '',
+          experience_details: (formValues.experienceDetails ?? '').trim(),
           test_day: sortingDates, //need to be an array of dates
         },
       });
@@ -129,7 +133,7 @@ const SignUpPage = () => {
     } catch (error) {
       console.log(error);
       toast.error(error.message);
-      await deleteUserFromFirebase(userCredential);
+      await deleteUserFromFirebase(user);
     }
   };
 
@@ -257,8 +261,8 @@ const SignUpPage = () => {
                             }}
                             options={options}
                             label={label}
-                            email={email ?? userCredential.email}
-                            name={name ?? userCredential.displayName}
+                            email={email ?? user.email}
+                            name={name ?? user.displayName}
                             onChange={(event) => {
                               setFormValues((prev) => {
                                 return { ...prev, [key]: event.target.value };
