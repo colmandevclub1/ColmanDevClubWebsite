@@ -21,10 +21,10 @@ export const useCreateUser = () => {
 
   return useMutation({
     mutationFn: (user) => {
-      addDoc(collection(db, 'users'), user);
+      addDoc(collection(db, 'users-v2'), user);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(['users-v2']);
       toast.success('User created');
     },
     onError: (error) => {
@@ -39,11 +39,11 @@ export const useUpdateUser = () => {
 
   return useMutation({
     mutationFn: ({ userId, updatedData }) => {
-      const userDoc = doc(db, 'users', userId);
+      const userDoc = doc(db, 'users-v2', userId);
       updateDoc(userDoc, updatedData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(['users-v2']);
       toast.success('User updated');
     },
     onError: (error) => {
@@ -58,11 +58,11 @@ export const useDeleteUser = () => {
 
   return useMutation({
     mutationFn: (user) => {
-      const userDoc = doc(db, 'users', user.id);
+      const userDoc = doc(db, 'users-v2', user.id);
       deleteDoc(userDoc);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(['users-v2']);
       toast.success('User deleted');
     },
     onError: (error) => {
