@@ -58,8 +58,8 @@ export const AuthContextProvider = ({ children }) => {
   const signInWithGoogleIfUserExist = async () => {
     const userCredential = await googleSignIn();
     const id = userCredential.user.uid
-    const user = await UserService.getById(id);
-    if (!user) {
+    const userData = await UserService.getById(id);
+    if (!userData) {
       await logout();
       await deleteUser(userCredential.user);
     }
