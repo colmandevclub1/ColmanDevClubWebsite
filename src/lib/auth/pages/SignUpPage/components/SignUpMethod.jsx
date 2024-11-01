@@ -5,13 +5,18 @@ import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from 'src/config/firebase-config';
 import { SigninMethods } from '../SignUpPage';
 
-const SignUpMethod = ({ setMethodClicked, setEmail, setName, setProfilePicPreview }) => {
+const SignUpMethod = ({ setMethodClicked, setEmail, setName, setFormValues, setProfilePicPreview }) => {
   const handleGoogleSignIn = async () => {
     try {
       const { user } = await signInWithPopup(auth, googleProvider);
       setEmail(user.email);
       setName(user.displayName);
       setProfilePicPreview(user.photoURL);
+      setFormValues({
+        email: user.email,
+        name: user.displayName,
+        profilePic: user.photoURL,
+      });
     } catch (error) {
       console.log(error);
     } finally {

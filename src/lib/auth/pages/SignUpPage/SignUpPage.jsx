@@ -193,6 +193,7 @@ const SignUpPage = () => {
               setEmail={setEmail}
               setName={setName}
               setProfilePicPreview={setProfilePicPreview}
+              setFormValues={setFormValues}
             />
           )}
         </div>
