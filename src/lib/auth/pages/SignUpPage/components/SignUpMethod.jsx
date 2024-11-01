@@ -27,18 +27,10 @@ const SignUpMethod = ({ setMethodClicked, setEmail, setName, setProfilePicPrevie
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        marginBottom: '150px'
+        marginBottom: '150px',
       }}
     >
-      <Stack p={{ xs: 5, lg: 1 }} gap={5} sx={{}}>
-        <Typography variant="h4" textAlign="center">
-          The registration for the club will open on Sunday 03/11/24
-        </Typography>
-        <Typography variant="h4" color="primary" textAlign="center" sx={{fontWeight: 'bold'}}>
-          Stay tuned!
-        </Typography>
-      </Stack>
-      {/* <Stack p={{ xs: 5, lg: 1 }} gap={5}>
+      <Stack p={{ xs: 5, lg: 1 }} gap={5}>
         <Stack>
           <Typography variant="caption" color={'primary'} textAlign={'end'}>
             *Recommended
@@ -62,7 +54,7 @@ const SignUpMethod = ({ setMethodClicked, setEmail, setName, setProfilePicPrevie
         >
           Submit using Email
         </Button>
-      </Stack> */}
+      </Stack>
     </Card>
   );
 };
