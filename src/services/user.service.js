@@ -43,7 +43,7 @@ const getById = async (id) => {
       console.log('User document:', userData);
       return userData;
     } else {
-      throw new Error('User document does not exist');
+      return null;
     }
   } catch (e) {
     console.error('Error in get user by id:', e);
@@ -71,5 +71,5 @@ const getByAuthId = async (auth_id) => {
 
 export const UserService = {
   create,
-  getById
+  getById,
 };

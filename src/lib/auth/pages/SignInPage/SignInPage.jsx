@@ -1,15 +1,15 @@
-import * as React from 'react';
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import * as React from 'react';
 import { useNavigate } from 'react-router';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Avatar, Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, CssBaseline, TextField, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 
+import GoogleIcon from '@mui/icons-material/Google';
 import { auth } from 'src/config/firebase-config';
 import { theme } from 'src/theme';
 import { UserAuth } from '../../authContext';
-import GoogleIcon from '@mui/icons-material/Google';
 import { SignInActionButtons } from './SignInActionButtons';
 
 const SignInPage = () => {
@@ -37,8 +37,8 @@ const SignInPage = () => {
 
   const handleGoogleSignIn = async (event) => {
     event.preventDefault();
-    await signInWithGoogleIfUserExist()
-  }
+    await signInWithGoogleIfUserExist();
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -58,7 +58,7 @@ const SignInPage = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, gap: "8px", pb: "8px" }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, gap: '8px', pb: '8px' }}>
             <TextField
               margin="normal"
               required
@@ -99,24 +99,28 @@ const SignInPage = () => {
                 {'Email or password is incorrect'}
               </Typography>
             )}
-            <Box display='flex' alignItems="center" justifyContent="space-between" gap="32px" >
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >
+            <Box display="flex" alignItems="center" justifyContent="space-between" gap="32px">
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 Sign In
               </Button>
-              
-                <Button 
-                  type="submit" 
-                  variant="outlined"
-                  onClick={handleGoogleSignIn} 
-                  sx={{
-                    width: "65px", height: "65px", borderRadius: "50%",
-                    display: "flex", justifyContent: "center", alignItems: "center"
-                  }} >
-                  <GoogleIcon />
-                  
-                </Button>
+
+              <Button
+                type="submit"
+                variant="outlined"
+                onClick={handleGoogleSignIn}
+                sx={{
+                  width: '65px',
+                  height: '65px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <GoogleIcon />
+              </Button>
             </Box>
-            <SignInActionButtons 
+            <SignInActionButtons
               openModal={openModal}
               auth={auth}
               setOpenModal={setOpenModal}
@@ -134,4 +138,3 @@ const SignInPage = () => {
 };
 
 export default SignInPage;
-

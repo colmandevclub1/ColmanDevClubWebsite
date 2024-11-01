@@ -3,6 +3,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { Button, Card, Stack, Typography } from '@mui/material';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from 'src/config/firebase-config';
+import { SigninMethods } from '../SignUpPage';
 
 const SignUpMethod = ({ setMethodClicked, setEmail, setName, setProfilePicPreview }) => {
   const handleGoogleSignIn = async () => {
@@ -14,7 +15,7 @@ const SignUpMethod = ({ setMethodClicked, setEmail, setName, setProfilePicPrevie
     } catch (error) {
       console.log(error);
     } finally {
-      setMethodClicked(true);
+      setMethodClicked(SigninMethods.GOOGLE);
     }
   };
 
@@ -49,7 +50,7 @@ const SignUpMethod = ({ setMethodClicked, setEmail, setName, setProfilePicPrevie
           variant="outlined"
           fullWidth
           sx={{ justifyContent: 'space-between' }}
-          onClick={() => setMethodClicked(true)}
+          onClick={() => setMethodClicked(SigninMethods.FIREBASE)}
           endIcon={<EmailRounded />}
         >
           Submit using Email

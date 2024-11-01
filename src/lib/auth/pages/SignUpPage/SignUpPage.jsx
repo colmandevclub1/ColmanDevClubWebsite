@@ -23,12 +23,17 @@ const FIELDS_MAP = {
   Select: FormSelectField,
 };
 
+export const SigninMethods = {
+  FIREBASE: 'FIREBASE',
+  GOOGLE: 'GOOGLE',
+};
+
 const SignUpPage = () => {
   const navigate = useNavigate();
 
   const [openModal, setOpenModal] = React.useState(false);
   const [loader, setLoader] = React.useState(false);
-  const [methodClicked, setMethodClicked] = React.useState(false);
+  const [methodClicked, setMethodClicked] = React.useState(null);
 
   const [formValues, setFormValues] = React.useState({});
   const [openRulesModal, setOpenRulesModal] = React.useState(false);
@@ -45,6 +50,30 @@ const SignUpPage = () => {
   const [validationErrors, setValidationErrors] = React.useState({});
 
   const storage = getStorage();
+
+  const handleFirebaseSignUp = async () => {
+    const newAuthUser = await signupWithFirebase({
+      email: formValues.email.trim(),
+      password: formValues.password?.trim() ?? '123456', //TODO: add password field
+    });
+
+    // TODO: export to function
+    setLoader(true);
+    let profilePicUrl = '';
+    if (profilePic) {
+      const storageRef = ref(storage, `profilePics/${profilePic.name}`);
+      await uploadBytes(storageRef, profilePic);
+      profilePicUrl = await getDownloadURL(storageRef);
+    }
+    setLoader(false);
+
+    await updateUser(newAuthUser, {
+      displayName: formValues.fullName?.trim(),
+      photoURL: profilePicUrl,
+    });
+
+    return newAuthUser;
+  };
 
   const onSignupHandler = async () => {
     try {
@@ -82,35 +111,15 @@ const SignUpPage = () => {
         sortingDates = '14.11.2024';
       }
 
-      let authUser = user;
+      let userData = null;
 
-      if (!authUser) {
-        const newAuthUser = await signupWithFirebase({
-          email: formValues.email.trim(),
-          password: formValues.password?.trim() ?? '123456',
-        });
-       
-        // TODO: export to function
-        setLoader(true);
-        let profilePicUrl = '';
-        if (profilePic) {
-          const storageRef = ref(storage, `profilePics/${profilePic.name}`);
-          await uploadBytes(storageRef, profilePic);
-          profilePicUrl = await getDownloadURL(storageRef);
-        }
-        setLoader(false);
-
-        await updateUser(newAuthUser, {
-          displayName: formValues.fullName?.trim(),
-          photoURL: profilePicUrl,
-        });
-        
-        authUser = newAuthUser;
-        if (!authUser) throw new Error('Failed to create user in firebase');
+      if (methodClicked === SigninMethods.FIREBASE) {
+        userData = await handleFirebaseSignUp();
       }
-      
 
-      console.log(authUser);
+      if (methodClicked === SigninMethods.GOOGLE) {
+        userData = user;
+      }
 
       const userDocData = new UserDoc({
         first_name: formValues.fullName.trim(),
@@ -128,7 +137,7 @@ const SignUpPage = () => {
         },
       });
 
-      await UserService.create({ userCredential: authUser, ...userDocData });
+      await UserService.create({ userCredential: userData, ...userDocData });
       setOpenModal(true); // TODO: add button to go to home page
     } catch (error) {
       console.log(error);
