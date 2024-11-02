@@ -140,7 +140,7 @@ const SignUpPage = () => {
       await UserService.create({ userCredential: userData, ...userDocData });
       setOpenModal(true); // TODO: add button to go to home page
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(error.message);
       await deleteUserFromFirebase(user);
     }

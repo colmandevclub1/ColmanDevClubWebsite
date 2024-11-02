@@ -10,12 +10,14 @@ import {
 } from 'firebase/auth';
 import { auth } from 'src/config/firebase-config.js';
 import { UserService } from 'src/services/user.service';
+import { useNavigate } from 'react-router-dom';
 
 const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   //TODO: not need to be here, move to a service
   const createUser = async (email, password) => {
@@ -62,6 +64,7 @@ export const AuthContextProvider = ({ children }) => {
       await logout();
       await deleteUser(userCredential.user);
     }
+    navigate('/');
   };
 
   const logout = async () => {
@@ -79,12 +82,24 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     setIsLoading(true);
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setIsLoading(false);
+      if (currentUser) {
+        const fetchUserData = async () => {
+          try {
+            const userData = await UserService.getById(currentUser.uid);
+            setUser(userData ? { ...currentUser, userData } : currentUser);
+          } catch (error) {
+            console.error('Error fetching user data:', error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        fetchUserData();
+      } else {
+        setUser(null);
+        setIsLoading(false);
+      }
     });
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
   return (

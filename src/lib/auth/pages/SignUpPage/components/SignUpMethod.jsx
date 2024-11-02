@@ -18,7 +18,7 @@ const SignUpMethod = ({ setMethodClicked, setEmail, setName, setFormValues, setP
         profilePic: user.photoURL,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setMethodClicked(SigninMethods.GOOGLE);
     }

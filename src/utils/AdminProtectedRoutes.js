@@ -5,7 +5,6 @@ import { auth } from 'src/config/firebase-config.js';
 
 const AdminProtectedRoute = ({ children }) => {
   const user = auth.currentUser;
-  console.log(user);
 
   const isAdmin = user?.role === roles.admin;
 
