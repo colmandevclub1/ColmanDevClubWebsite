@@ -2,13 +2,11 @@ import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/aut
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Avatar, Box, Button, Container, CssBaseline, TextField, Typography } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
+import { Box, Button, Card, Container, Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
 
 import GoogleIcon from '@mui/icons-material/Google';
 import { auth } from 'src/config/firebase-config';
-import { theme } from 'src/theme';
+import { ArrowButton } from 'src/ui';
 import { UserAuth } from '../../authContext';
 import { SignInActionButtons } from './SignInActionButtons';
 
@@ -41,31 +39,34 @@ const SignInPage = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
+    <Container sx={{ height: '100svh' }} maxWidth="lg">
+      <Stack pt={{ xs: 4, md: 8, lg: 12 }} alignItems={'center'} gap={{ xs: 5, md: 5, lg: 10 }}>
+        <Typography
+          variant="h4"
           sx={{
-            marginTop: 8,
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            fontWeight: 900,
+            color: 'inherit',
+            textDecoration: 'none',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon sx={{ color: 'white' }} />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+          Login To Your
+          <Typography color="primary" variant="h4" fontWeight={900} ml={1}>
+            Account
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, gap: '8px', pb: '8px' }}>
+          .
+        </Typography>
+        <Stack gap={{ xs: 2, md: 5, lg: 10 }} width={'100%'} direction={{ xs: 'column', lg: 'row' }}>
+          <Card component="form" onSubmit={handleSubmit} sx={{ p: { xs: 5, md: 5, lg: 10 }, flex: 1 }}>
+            <Typography variant="h6">Email</Typography>
             <TextField
               margin="normal"
               required
               fullWidth
+              size="small"
               id="email"
-              label="Email Address"
               name="email"
+              placeholder="user@email.com"
               autoComplete="email"
               autoFocus
               onChange={(e) =>
@@ -74,12 +75,14 @@ const SignInPage = () => {
                 })
               }
             />
+            <Typography variant="h6">Password</Typography>
             <TextField
               margin="normal"
               required
               fullWidth
+              size="small"
+              placeholder="********"
               name="password"
-              label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
@@ -99,41 +102,45 @@ const SignInPage = () => {
                 {'Email or password is incorrect'}
               </Typography>
             )}
-            <Box display="flex" alignItems="center" justifyContent="space-between" gap="32px">
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Sign In
-              </Button>
-
-              <Button
-                type="submit"
-                variant="outlined"
-                onClick={handleGoogleSignIn}
-                sx={{
-                  width: '65px',
-                  height: '65px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <GoogleIcon />
-              </Button>
+            <Box mt={2} sx={{ display: { lg: 'none' } }}>
+              <IconButton onClick={handleGoogleSignIn} size="large" variant="squared">
+                <GoogleIcon sx={{ color: 'white' }} />
+              </IconButton>
             </Box>
-            <SignInActionButtons
-              openModal={openModal}
-              auth={auth}
-              setOpenModal={setOpenModal}
-              emailSent={emailSent}
-              resetEmailValue={resetEmailValue}
-              setEmailSent={setEmailSent}
-              setResetEmailValue={setResetEmailValue}
-              sendPasswordResetEmail={sendPasswordResetEmail}
-            />
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+            <ArrowButton type="submit" variant="contained" rtl={false} sx={{ marginTop: 3 }}>
+              <Typography textTransform={'none'} variant="h6">
+                Login To Your Account
+              </Typography>
+            </ArrowButton>
+          </Card>
+          <Card
+            component="form"
+            variant="light"
+            sx={{ p: { md: 5, lg: 10 }, flex: 1, display: { xs: 'none', md: 'none', lg: 'block' } }}
+          >
+            <Button
+              variant="outlined"
+              endIcon={<GoogleIcon />}
+              fullWidth
+              sx={{ justifyContent: 'space-between' }}
+              onClick={handleGoogleSignIn}
+            >
+              Sign In With Google
+            </Button>
+          </Card>
+        </Stack>
+        <SignInActionButtons
+          openModal={openModal}
+          auth={auth}
+          setOpenModal={setOpenModal}
+          emailSent={emailSent}
+          resetEmailValue={resetEmailValue}
+          setEmailSent={setEmailSent}
+          setResetEmailValue={setResetEmailValue}
+          sendPasswordResetEmail={sendPasswordResetEmail}
+        />
+      </Stack>
+    </Container>
   );
 };
 
