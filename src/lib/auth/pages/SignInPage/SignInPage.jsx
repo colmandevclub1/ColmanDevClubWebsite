@@ -2,7 +2,7 @@ import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/aut
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 
-import { Box, Button, Card, Container, Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Container, IconButton, Stack, TextField, Typography } from '@mui/material';
 
 import GoogleIcon from '@mui/icons-material/Google';
 import { auth } from 'src/config/firebase-config';
@@ -26,11 +26,11 @@ const SignInPage = () => {
     signInWithEmailAndPassword(auth, formValues.email, formValues.password)
       .then((userCredential) => {
         localStorage.setItem('userToken', JSON.stringify(userCredential._tokenResponse.idToken));
-        navigate('/syllabus');
       })
       .catch((error) => {
         setError(true);
       });
+    navigate('/');
   };
 
   const handleGoogleSignIn = async (event) => {
@@ -39,7 +39,12 @@ const SignInPage = () => {
   };
 
   return (
-    <Container sx={{ height: '100svh' }} maxWidth="lg">
+    <Container
+      sx={{
+        height: '100svh',
+      }}
+      maxWidth="lg"
+    >
       <Stack pt={{ xs: 4, md: 8, lg: 12 }} alignItems={'center'} gap={{ xs: 5, md: 5, lg: 10 }}>
         <Typography
           variant="h4"
@@ -108,7 +113,7 @@ const SignInPage = () => {
               </IconButton>
             </Box>
             <ArrowButton type="submit" variant="contained" rtl={false} sx={{ marginTop: 3 }}>
-              <Typography textTransform={'none'} variant="h6">
+              <Typography textTransform={'none'} variant="h6" fontWeight={900}>
                 Login To Your Account
               </Typography>
             </ArrowButton>
