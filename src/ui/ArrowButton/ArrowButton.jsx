@@ -5,7 +5,11 @@ import { ArrowButtonContainer, ArrowIconContainer } from './ArrowButton.styles';
 const ArrowButton = ({ children, rtl = true, ...rest }) => {
   return (
     <Button variant="contained" size="large" {...rest}>
-      <ArrowButtonContainer>
+      <ArrowButtonContainer
+        sx={{
+          flexDirection: rtl ? 'row-reverse' : 'row',
+        }}
+      >
         <Stack px={4}>{children}</Stack>
         <ArrowIconContainer {...(rest.disabled && { display: 'none' })}>
           <EastIcon

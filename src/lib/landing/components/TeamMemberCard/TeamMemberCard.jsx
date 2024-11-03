@@ -5,21 +5,9 @@ import { Link } from 'react-router-dom';
 
 import { Avatar, IconButton, Stack, Typography } from '@mui/material';
 import { TeamMemberCardContainer } from './TeamMemberCard.style';
-import { checkImagePermission } from './utils';
 
 const TeamMemberCard = ({ profileImage, name, about, linkedin }) => {
   const [isImgLoaded, setIsImgLoaded] = React.useState(false);
-  const [isValide, setIsValide] = React.useState(false);
-
-  React.useEffect(() => {
-    const res = checkImagePermission(profileImage);
-    if (res) {
-      setIsValide(true);
-      setIsImgLoaded(true);
-    }
-  }, [profileImage]);
-
-  if (!isValide) return null;
 
   return (
     <TeamMemberCardContainer>

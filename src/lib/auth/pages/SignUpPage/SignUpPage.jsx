@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { EntranceAnimation } from 'src/animation';
 import UserDoc from 'src/classes/User.class';
-import { deleteUserFromFirebase, signupWithFirebase } from 'src/config/firebase-utils';
+import { deleteUserFromFirebase, signupWithFirebase, updateUser } from 'src/config/firebase-utils';
 import { roles } from 'src/constants/roles';
 import { allRules, errorMessages, labels } from 'src/data';
 import { UserService } from 'src/services/user.service';
@@ -16,10 +16,16 @@ import FormSelectField from 'src/ui/FormSelectField';
 import Loader from './components/Loader';
 import SignUpMethod from './components/SignUpMethod';
 import css from './style.module.css';
+import { UserAuth } from '../../authContext';
 
 const FIELDS_MAP = {
   TextField: FormInputField,
   Select: FormSelectField,
+};
+
+export const SigninMethods = {
+  FIREBASE: 'FIREBASE',
+  GOOGLE: 'GOOGLE',
 };
 
 const SignUpPage = () => {
@@ -27,7 +33,7 @@ const SignUpPage = () => {
 
   const [openModal, setOpenModal] = React.useState(false);
   const [loader, setLoader] = React.useState(false);
-  const [methodClicked, setMethodClicked] = React.useState(false);
+  const [methodClicked, setMethodClicked] = React.useState(null);
 
   const [formValues, setFormValues] = React.useState({});
   const [openRulesModal, setOpenRulesModal] = React.useState(false);
@@ -40,11 +46,37 @@ const SignUpPage = () => {
     first: false,
     second: false,
   });
-
+  const { user } = UserAuth();
   const [validationErrors, setValidationErrors] = React.useState({});
-  const [userCredential, setUserCredential] = React.useState(null);
 
   const storage = getStorage();
+
+  const filterdLabels =
+    methodClicked === SigninMethods.FIREBASE ? labels : labels.filter((label) => label.key !== 'password');
+
+  const handleFirebaseSignUp = async () => {
+    const newAuthUser = await signupWithFirebase({
+      email: formValues.email.trim(),
+      password: formValues.password?.trim(),
+    });
+
+    // TODO: export to function
+    setLoader(true);
+    let profilePicUrl = '';
+    if (profilePic) {
+      const storageRef = ref(storage, `profilePics/${profilePic.name}`);
+      await uploadBytes(storageRef, profilePic);
+      profilePicUrl = await getDownloadURL(storageRef);
+    }
+    setLoader(false);
+
+    await updateUser(newAuthUser, {
+      displayName: formValues.fullName?.trim(),
+      photoURL: profilePicUrl,
+    });
+
+    return newAuthUser;
+  };
 
   const onSignupHandler = async () => {
     try {
@@ -53,7 +85,7 @@ const SignUpPage = () => {
         return;
       }
 
-      const validationState = labels.reduce((obj, { key, validator }) => {
+      const validationState = filterdLabels.reduce((obj, { key, validator }) => {
         obj[key] = !validator(formValues[key]);
         return obj;
       }, {});
@@ -82,54 +114,38 @@ const SignUpPage = () => {
         sortingDates = '14.11.2024';
       }
 
-      let authUser = userCredential;
+      let userData = null;
 
-      if (!authUser) {
-        setLoader(true);
-        let profilePicUrl = '';
-        if (profilePic) {
-          const storageRef = ref(storage, `profilePics/${profilePic.name}`);
-          await uploadBytes(storageRef, profilePic);
-          profilePicUrl = await getDownloadURL(storageRef);
-        }
-        setLoader(false);
-
-        const authUser2 = await signupWithFirebase({
-          email: formValues.email,
-          password: formValues.password ?? '123456',
-          displayName: `${formValues.fullName} ${formValues.fullName}`,
-          photoURL: profilePicUrl,
-        });
-        authUser = authUser2;
-        console.log({ authUser2 });
-
-        if (!authUser2) throw new Error('Failed to create user in firebase');
+      if (methodClicked === SigninMethods.FIREBASE) {
+        userData = await handleFirebaseSignUp();
       }
 
-      console.log(authUser);
+      if (methodClicked === SigninMethods.GOOGLE) {
+        userData = user;
+      }
 
       const userDocData = new UserDoc({
-        first_name: formValues.fullName,
-        last_name: formValues.fullName,
-        card_id: formValues.id,
-        phone_number: formValues.phoneNumber,
-        role: roles.admin,
+        first_name: formValues.fullName.trim(),
+        last_name: formValues.fullName.trim(),
+        card_id: formValues.id.trim(),
+        phone_number: formValues.phoneNumber.trim(),
+        role: roles.applicant,
         appliciant_data: {
           field_of_study: formValues.fieldOfStudy,
           school_year: formValues.schoolYear,
           program: formValues.program,
           experience: formValues.experience,
-          experience_details: formValues.experienceDetails ?? '',
+          experience_details: (formValues.experienceDetails ?? '').trim(),
           test_day: sortingDates, //need to be an array of dates
         },
       });
 
-      await UserService.create({ userCredential: authUser, ...userDocData });
+      await UserService.create({ userCredential: userData, ...userDocData });
       setOpenModal(true); // TODO: add button to go to home page
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(error.message);
-      await deleteUserFromFirebase(userCredential);
+      await deleteUserFromFirebase(user);
     }
   };
 
@@ -180,6 +196,7 @@ const SignUpPage = () => {
               setEmail={setEmail}
               setName={setName}
               setProfilePicPreview={setProfilePicPreview}
+              setFormValues={setFormValues}
             />
           )}
         </div>
@@ -235,8 +252,8 @@ const SignUpPage = () => {
                     marginBottom: '2rem',
                   }}
                 >
-                  {labels.map(({ type, label, key, options, validator }, index) => {
-                    const FieldComponent = FIELDS_MAP[type];
+                  {filterdLabels.map(({ inputType, type, label, key, options, validator }, index) => {
+                    const FieldComponent = FIELDS_MAP[inputType];
                     return label === 'Experience Details' && formValues['experience'] !== 'כן' ? null : (
                       <EntranceAnimation key={index} animationDelay={label === 'Experience Details' ? 0 : index * 0.2}>
                         <Box
@@ -247,7 +264,7 @@ const SignUpPage = () => {
                           }}
                         >
                           <FieldComponent
-                            type="text"
+                            type={type ?? 'text'}
                             sx={{
                               width: {
                                 xs: '90%',
@@ -257,8 +274,8 @@ const SignUpPage = () => {
                             }}
                             options={options}
                             label={label}
-                            email={email ?? userCredential.email}
-                            name={name ?? userCredential.displayName}
+                            email={email ?? user.email}
+                            name={name ?? user.displayName}
                             onChange={(event) => {
                               setFormValues((prev) => {
                                 return { ...prev, [key]: event.target.value };
