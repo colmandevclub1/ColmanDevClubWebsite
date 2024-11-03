@@ -54,7 +54,7 @@ const SignUpPage = () => {
   const handleFirebaseSignUp = async () => {
     const newAuthUser = await signupWithFirebase({
       email: formValues.email.trim(),
-      password: formValues.password?.trim() ?? '123456', //TODO: add password field
+      password: formValues.password?.trim(),
     });
 
     // TODO: export to function
@@ -249,8 +249,8 @@ const SignUpPage = () => {
                     marginBottom: '2rem',
                   }}
                 >
-                  {labels.map(({ type, label, key, options, validator }, index) => {
-                    const FieldComponent = FIELDS_MAP[type];
+                  {labels.map(({ inputType, type, label, key, options, validator }, index) => {
+                    const FieldComponent = FIELDS_MAP[inputType];
                     return label === 'Experience Details' && formValues['experience'] !== 'כן' ? null : (
                       <EntranceAnimation key={index} animationDelay={label === 'Experience Details' ? 0 : index * 0.2}>
                         <Box
@@ -261,7 +261,7 @@ const SignUpPage = () => {
                           }}
                         >
                           <FieldComponent
-                            type="text"
+                            type={type ?? 'text'}
                             sx={{
                               width: {
                                 xs: '90%',

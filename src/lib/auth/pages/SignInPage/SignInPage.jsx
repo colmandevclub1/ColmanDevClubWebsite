@@ -26,7 +26,7 @@ const SignInPage = () => {
     signInWithEmailAndPassword(auth, formValues.email, formValues.password)
       .then((userCredential) => {
         localStorage.setItem('userToken', JSON.stringify(userCredential._tokenResponse.idToken));
-      })
+    })
       .catch((error) => {
         setError(true);
       });
