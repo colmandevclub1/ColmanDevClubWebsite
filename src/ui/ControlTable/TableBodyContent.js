@@ -14,13 +14,13 @@ const TableBodyContent = ({ rows, columns, columnColorsMap, onChangeHandler }) =
               const value = row[subColumn.field];
               const columnType = subColumn.type;
               const colorMap = columnColorsMap[columnType];
-
+              const statusId = row[subColumn.id];
               return (
                 <StyledTableCell key={subColumn.field} style={{ width: subColumn.width }} cellType="body">
                   {colorMap && value && colorMap[value] !== undefined ? (
                     <ColorSelect
                       colors={colorMap}
-                      onColorSelect={async (color) =>  {await onChangeHandler(row.id, subColumn.type, color.key)}}
+                      onColorSelect={async (color) =>  {await onChangeHandler(statusId, subColumn.type, color.key)}}
                       defaultValue={value}
                     />
                   ) : (

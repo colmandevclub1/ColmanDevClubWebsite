@@ -17,13 +17,17 @@ const ControlTable = (props) => {
       setColumns(newColumns);
       setRows(newRows);
     }
+    else {
+      setColumns([]);
+      setRows([]);
+    }
   }, [props.data]);
 
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 3, overflow: 'auto', height: '80svh' }}>
       <Table sx={{ tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 5 }}>
         <TableHead sx={{ position: 'sticky', top: '5px', zIndex: 1 }}>
-          <TableHeader columns={columns} />
+          <TableHeader columns={columns} onEditColumnHandler={props.onEditColumnHandler} />
         </TableHead>
         <TableBody>
           <TableBodyContent rows={rows} columns={columns} columnColorsMap={props.columnColorsMap} onChangeHandler={props.onChangeHandler}  />

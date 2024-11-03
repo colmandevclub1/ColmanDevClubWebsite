@@ -33,18 +33,24 @@ export const generateColumns = (data, totalColCriteria) => {
     if (key !== mainColumnKey) {
       const subColumnsData = firstRow[key];
       if (typeof subColumnsData === 'object') {
-        const subColumns = Object.keys(subColumnsData).map((subKey) => ({
-          field: `${key}_${subKey}`,
-          headerName: subKey,
-          width: 60,
-          type: subKey,
-          id:''
-        }));
+        const subColumns = Object.keys(subColumnsData).map((subKey) => {
+          if (subKey !== 'id' && subKey !=='column_id') {
+            return {
+              field: `${key}_${subKey}`,
+              headerName: subKey,
+              width: 60,
+              type: subKey,
+              id:`${key}_id`
+            };
+          }
+          return null; 
+        }).filter(Boolean); 
+
         columns.push({
           headerName: key,
           subColumns: subColumns,
           width: subColumns.reduce((sum, subCol) => sum + subCol.width, 0),
-          id:''
+          column_id:subColumnsData.column_id,
         });
       } else {
         columns.push({
@@ -52,7 +58,6 @@ export const generateColumns = (data, totalColCriteria) => {
           headerName: key,
           width: 80,
           type: key,
-          id:''
         });
       }
     }
@@ -72,3 +77,4 @@ export const generateColumns = (data, totalColCriteria) => {
 
   return columns;
 };
+

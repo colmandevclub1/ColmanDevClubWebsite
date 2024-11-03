@@ -5,10 +5,12 @@ import { UserService } from './user.service';
 import UserWeekStats from 'src/classes/UserWeekStats';
 import  {userWeekStatsService}  from './userWeekStats.service';
 import { roles } from 'src/constants/roles';
+import Week from 'src/classes/Week.class';
 
 const create = async (newWeek) => {
   try {
-    const week = await addDoc(collection(db, 'weeks'), newWeek);
+    const emptyProgWeekToDb = new Week({...newWeek, programRef: ''});
+    const week = await addDoc(collection(db, 'weeks'), {...emptyProgWeekToDb});
     const users = await UserService.getAllUsers();
     users
       .filter((user) => user.role === roles.member)
@@ -30,12 +32,12 @@ const create = async (newWeek) => {
   }
 };
 
-const createByProgram = async (newWeek,program) => {
+const createByProgram = async (newWeek, program) => {
   try {
-    const week = await addDoc(collection(db, 'weeks'), newWeek);
+    const weekToDb = new Week({...newWeek, programRef: program});
+    const week = await addDoc(collection(db, 'weeks'), {...weekToDb});
     const users = await UserService.getAllUsersByProgram(program);
-    users
-    .forEach(async (user) => {
+    users.forEach(async (user) => {
       const userWeekStats = new UserWeekStats({
         weekRef: week.id,
         userRef: user.id,
@@ -45,8 +47,8 @@ const createByProgram = async (newWeek,program) => {
         updated_at: new Date(),
         updated_by: '',
       });
-        await userWeekStatsService.create({ ...userWeekStats },program);
-      });
+      await userWeekStatsService.create({ ...userWeekStats }, program);
+    });
     return week;
   } catch (error) {
     toast.error(error.message);
@@ -54,12 +56,20 @@ const createByProgram = async (newWeek,program) => {
 };
 const get = async (id) => {
   try {
-    const week = await getDoc(doc(db, 'weeks', id));
-    return week;
+    const weekSnapshot = await getDoc(doc(db, 'weeks', id));
+    if (weekSnapshot.exists()) {
+      const weekData = weekSnapshot.data();
+      return weekData;
+    } else {
+      toast.error("No document found with the given ID");
+      return null;
+    }
   } catch (error) {
     toast.error(error.message);
+    return null;
   }
 };
+
 
 const getAll = async () => {
   try {

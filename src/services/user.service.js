@@ -1,4 +1,4 @@
-import { addDoc, collection, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { Validators } from './validators.service';
 import { toast } from 'react-toastify';
 import { db } from 'src/config/firebase-config';
@@ -105,7 +105,7 @@ const getAllUsers = async () => {
 const getAllUsersByProgram = async (program) => {
   try {
     const userCollection = collection(db, 'users-v2');
-    const q = query(userCollection, where('appliciant_data.program', '==', program));
+    const q = query(userCollection, where('appliciant_data.programRef', '==', program));
     const userSnapshot = await getDocs(q);
     const users = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     return users;
@@ -115,9 +115,34 @@ const getAllUsersByProgram = async (program) => {
   }
 };
 
+const updateUserProgramRef = async (userId, programRef) => {
+  try {
+    const userDocRef = doc(db, 'users-v2', userId);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+
+      const updatedApplicantData = {
+        ...userData.appliciant_data,
+        programRef: programRef,
+      };
+
+      await setDoc(userDocRef, {
+        appliciant_data: updatedApplicantData,
+      }, { merge: true });
+    } else {
+      throw new Error('User document does not exist');
+    }
+  } catch (error) {
+    console.error('Error updating user program reference:', error);
+    toast.error('Failed to update user program reference');
+  }
+};
 
 export const UserService = {
   create,
   getAllUsers,
   getAllUsersByProgram,
+  updateUserProgramRef
 };

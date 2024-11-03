@@ -54,13 +54,27 @@ const getAllByWeekRef = async (weekRef) => {
   }
 };
 
-const update = async (id, updatedWeek) => {
+const update = async (id, updatedFields) => {
   try {
-    await setDoc(doc(db, 'userWeekStats', id), updatedWeek);
+    const docRef = doc(db, 'userWeekStats', id);
+    const existingDoc = await getDoc(docRef);
+
+    if (existingDoc.exists()) {
+      const updatedDoc = {
+        ...existingDoc.data(),
+        ...updatedFields,
+        updated_at: new Date(),
+      };
+
+      await setDoc(docRef, updatedDoc);
+    } else {
+      toast.error('Document does not exist');
+    }
   } catch (error) {
     toast.error(error.message);
   }
 };
+
 
 const remove = async (id) => {
   try {
