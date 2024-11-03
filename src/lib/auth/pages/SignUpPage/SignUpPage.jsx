@@ -51,6 +51,9 @@ const SignUpPage = () => {
 
   const storage = getStorage();
 
+  const filterdLabels =
+    methodClicked === SigninMethods.FIREBASE ? labels : labels.filter((label) => label.key !== 'password');
+
   const handleFirebaseSignUp = async () => {
     const newAuthUser = await signupWithFirebase({
       email: formValues.email.trim(),
@@ -82,7 +85,7 @@ const SignUpPage = () => {
         return;
       }
 
-      const validationState = labels.reduce((obj, { key, validator }) => {
+      const validationState = filterdLabels.reduce((obj, { key, validator }) => {
         obj[key] = !validator(formValues[key]);
         return obj;
       }, {});
@@ -249,7 +252,7 @@ const SignUpPage = () => {
                     marginBottom: '2rem',
                   }}
                 >
-                  {labels.map(({ inputType, type, label, key, options, validator }, index) => {
+                  {filterdLabels.map(({ inputType, type, label, key, options, validator }, index) => {
                     const FieldComponent = FIELDS_MAP[inputType];
                     return label === 'Experience Details' && formValues['experience'] !== 'כן' ? null : (
                       <EntranceAnimation key={index} animationDelay={label === 'Experience Details' ? 0 : index * 0.2}>
