@@ -1,14 +1,14 @@
-import * as React from 'react';
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import * as React from 'react';
 import { useNavigate } from 'react-router';
 
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Avatar, Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
+import { Box, Button, Card, Container, IconButton, Stack, TextField, Typography } from '@mui/material';
 
+import GoogleIcon from '@mui/icons-material/Google';
 import { auth } from 'src/config/firebase-config';
-import { theme } from 'src/theme';
-import { TransitionsModal } from 'src/ui';
+import { ArrowButton } from 'src/ui';
+import { UserAuth } from '../../authContext';
+import { SignInActionButtons } from './SignInActionButtons';
 
 const SignInPage = () => {
   const [formValues, setFormValues] = React.useState({});
@@ -16,47 +16,62 @@ const SignInPage = () => {
   const [emailSent, setEmailSent] = React.useState(false);
   const [resetEmailValue, setResetEmailValue] = React.useState('');
   const [error, setError] = React.useState(false);
+  const { signInWithGoogleIfUserExist } = UserAuth();
   const navigate = useNavigate();
+
+  //TODO: use the auth context
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     signInWithEmailAndPassword(auth, formValues.email, formValues.password)
       .then((userCredential) => {
-        console.log(userCredential.user);
         localStorage.setItem('userToken', JSON.stringify(userCredential._tokenResponse.idToken));
-        navigate('/syllabus');
-      })
+    })
       .catch((error) => {
         setError(true);
       });
+    navigate('/');
+  };
+
+  const handleGoogleSignIn = async (event) => {
+    event.preventDefault();
+    await signInWithGoogleIfUserExist();
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
+    <Container
+      sx={{
+        height: '100svh',
+      }}
+      maxWidth="lg"
+    >
+      <Stack pt={{ xs: 4, md: 8, lg: 12 }} alignItems={'center'} gap={{ xs: 5, md: 5, lg: 10 }}>
+        <Typography
+          variant="h4"
           sx={{
-            marginTop: 8,
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            fontWeight: 900,
+            color: 'inherit',
+            textDecoration: 'none',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon sx={{ color: 'white' }} />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+          Login To Your
+          <Typography color="primary" variant="h4" fontWeight={900} ml={1}>
+            Account
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          .
+        </Typography>
+        <Stack gap={{ xs: 2, md: 5, lg: 10 }} width={'100%'} direction={{ xs: 'column', lg: 'row' }}>
+          <Card component="form" onSubmit={handleSubmit} sx={{ p: { xs: 5, md: 5, lg: 10 }, flex: 1 }}>
+            <Typography variant="h6">Email</Typography>
             <TextField
               margin="normal"
               required
               fullWidth
+              size="small"
               id="email"
-              label="Email Address"
               name="email"
+              placeholder="user@email.com"
               autoComplete="email"
               autoFocus
               onChange={(e) =>
@@ -65,12 +80,14 @@ const SignInPage = () => {
                 })
               }
             />
+            <Typography variant="h6">Password</Typography>
             <TextField
               margin="normal"
               required
               fullWidth
+              size="small"
+              placeholder="********"
               name="password"
-              label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
@@ -90,61 +107,45 @@ const SignInPage = () => {
                 {'Email or password is incorrect'}
               </Typography>
             )}
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  <Typography
-                    onClick={() => {
-                      setOpenModal(true);
-                    }}
-                  >
-                    Forgot password?
-                  </Typography>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  <Typography>Don't have an account? Sign Up</Typography>
-                </Link>
-              </Grid>
-            </Grid>
-            <TransitionsModal
-              openModal={openModal}
-              setOpenModal={setOpenModal}
-              closeOnOverlay={true}
-              btnText="Reset Password"
-              btnOnClick={async () => {
-                //TODO -> need to fix. not working
-                if (resetEmailValue !== '') {
-                  setEmailSent(true);
-                  await sendPasswordResetEmail(auth, resetEmailValue);
-                  console.log('Password reset email sent');
-                  setOpenModal(false);
-                }
-              }}
+            <Box mt={2} sx={{ display: { lg: 'none' } }}>
+              <IconButton onClick={handleGoogleSignIn} size="large" variant="squared">
+                <GoogleIcon sx={{ color: 'white' }} />
+              </IconButton>
+            </Box>
+            <ArrowButton type="submit" variant="contained" rtl={false} sx={{ marginTop: 3 }}>
+              <Typography textTransform={'none'} variant="h6" fontWeight={900}>
+                Login To Your Account
+              </Typography>
+            </ArrowButton>
+          </Card>
+          <Card
+            component="form"
+            variant="light"
+            sx={{ p: { md: 5, lg: 10 }, flex: 1, display: { xs: 'none', md: 'none', lg: 'block' } }}
+          >
+            <Button
+              variant="outlined"
+              endIcon={<GoogleIcon />}
+              fullWidth
+              sx={{ justifyContent: 'space-between' }}
+              onClick={handleGoogleSignIn}
             >
-              {!emailSent ? (
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="email"
-                  label="Email Address"
-                  type="email"
-                  id="emailReset"
-                  onChange={(e) => setResetEmailValue(e.target.value)}
-                />
-              ) : (
-                <Typography>{'Password reset email sent'}</Typography>
-              )}
-            </TransitionsModal>
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+              Sign In With Google
+            </Button>
+          </Card>
+        </Stack>
+        <SignInActionButtons
+          openModal={openModal}
+          auth={auth}
+          setOpenModal={setOpenModal}
+          emailSent={emailSent}
+          resetEmailValue={resetEmailValue}
+          setEmailSent={setEmailSent}
+          setResetEmailValue={setResetEmailValue}
+          sendPasswordResetEmail={sendPasswordResetEmail}
+        />
+      </Stack>
+    </Container>
   );
 };
 

@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import { AppBar, Drawer, DrawerHeader } from './Layout.styles';
 import { primaryList, secondaryList, tertiaryList } from '../../routes';
 import { SideMenuListItem } from '../../components';
+import { LS_ROUTER_KEY } from 'src/context/RouterContext';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Layout = ({ children }) => {
   const theme = useTheme();
@@ -62,6 +64,15 @@ const Layout = ({ children }) => {
               {tertiaryList.map((item) => (
                 <SideMenuListItem key={item.text} open={open} {...item} />
               ))}
+              <SideMenuListItem
+                text="Logout"
+                icon={<LogoutIcon />}
+                open={open}
+                onClick={() => {
+                  localStorage.removeItem(LS_ROUTER_KEY);
+                  window.location.reload();
+                }}
+              />
             </List>
           </Stack>
         </Stack>

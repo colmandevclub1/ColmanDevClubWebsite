@@ -1,58 +1,68 @@
 import { EmailRounded } from '@mui/icons-material';
-import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
-import { Button, Card, Stack, useMediaQuery, useTheme } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Button, Card, Stack, Typography } from '@mui/material';
 import { signInWithPopup } from 'firebase/auth';
-import { auth, facebookProvider } from 'src/config/firebase-config';
+import { auth, googleProvider } from 'src/config/firebase-config';
+import { SigninMethods } from '../SignUpPage';
 
-const SignUpMethod = ({ setMethodClicked, setProfilePic, setEmail, setName, setFormValues }) => {
-    const theme = useTheme();
-    const isLgOrBigger = useMediaQuery(theme.breakpoints.up('lg'));
+const SignUpMethod = ({ setMethodClicked, setEmail, setName, setFormValues, setProfilePicPreview }) => {
+  const handleGoogleSignIn = async () => {
+    try {
+      const { user } = await signInWithPopup(auth, googleProvider);
+      setEmail(user.email);
+      setName(user.displayName);
+      setProfilePicPreview(user.photoURL);
+      setFormValues({
+        email: user.email,
+        name: user.displayName,
+        profilePic: user.photoURL,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setMethodClicked(SigninMethods.GOOGLE);
+    }
+  };
 
-    const handleFacebookSignIn = async () => {
-        try {
-            const result = await signInWithPopup(auth, facebookProvider);
-            setName(result.user['displayName']);
-            setEmail(result.user['email']);
-            setProfilePic(result.user['photoURL']);
-            setFormValues((prev) => {
-                return {
-                    ...prev, fullName: result.user['displayName'],
-                    email: result.user['email'],
-                    profilePic: result.user['photoURL']
-                }
-            });
-        } catch (error) {
-            console.log(error);
-        }
-        finally {
-            setMethodClicked(true);
-        }
-    };
-
-    return (
-        <Card variant="filled" sx={{ height: isLgOrBigger ? '30svh' : '100%', width: isLgOrBigger ? '35svw' : '90%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-            <Stack p={isLgOrBigger ? 5 : 1} gap={5}>
-                <Button
-                    variant="outlined"
-                    endIcon={<FacebookRoundedIcon />}
-                    fullWidth
-                    sx={{ justifyContent: 'space-between' }}
-                    onClick={() => handleFacebookSignIn()}
-                >
-                    Submit using Facebook
-                </Button>
-                <Button
-                    variant="outlined"
-                    fullWidth
-                    sx={{ justifyContent: 'space-between' }}
-                    onClick={() => setMethodClicked(true)}
-                    endIcon={<EmailRounded />}
-                >
-                    Submit using Email
-                </Button>
-            </Stack>
-        </Card>
-    );
+  return (
+    <Card
+      variant="filled"
+      sx={{
+        height: { xs: '100%', lg: '30svh' },
+        width: { xs: '100%', lg: '35svw' },
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        marginBottom: '150px',
+      }}
+    >
+      <Stack p={{ xs: 5, lg: 1 }} gap={5}>
+        <Stack>
+          <Typography variant="caption" color={'primary'} textAlign={'end'}>
+            *Recommended
+          </Typography>
+          <Button
+            variant="outlined"
+            endIcon={<GoogleIcon />}
+            fullWidth
+            sx={{ justifyContent: 'space-between' }}
+            onClick={() => handleGoogleSignIn()}
+          >
+            Submit using Google
+          </Button>
+        </Stack>
+        <Button
+          variant="outlined"
+          fullWidth
+          sx={{ justifyContent: 'space-between' }}
+          onClick={() => setMethodClicked(SigninMethods.FIREBASE)}
+          endIcon={<EmailRounded />}
+        >
+          Submit using Email
+        </Button>
+      </Stack>
+    </Card>
+  );
 };
 
 export default SignUpMethod;

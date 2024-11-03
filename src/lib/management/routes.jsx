@@ -19,7 +19,4 @@ export const secondaryList = [
   { text: 'Spam', icon: <MailIcon />, link: '/spam' },
 ];
 
-export const tertiaryList = [
-  { text: 'Settings', icon: <SettingsIcon />, link: '/settings' },
-  { text: 'Logout', icon: <LogoutIcon />, link: '/logout' },
-];
+export const tertiaryList = [{ text: 'Settings', icon: <SettingsIcon />, link: '/settings' }];

@@ -3,20 +3,25 @@ import { auth, db } from './firebase-config';
 import { createUserWithEmailAndPassword, updateProfile, deleteUser, signInWithEmailAndPassword } from 'firebase/auth';
 import { toast } from 'react-toastify';
 
-export const signupWithFirebase = async ({ email, password, displayName, photoURL }) => {
+export const signupWithFirebase = async ({ email, password }) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    await updateProfile(user, {
-      displayName,
-      photoURL,
-    });
     return user;
   } catch (e) {
     console.error('Error in signupWithFirebase: ', e);
     toast.error(e.message);
   }
 };
+
+export const updateUser = async(user, data) => {
+  try {
+    await updateProfile(user, data);
+  } catch (error) {
+    toast.error("Failed to update user")
+    console.error(`Failed to update user: ${error}`);
+  }
+}
 
 export const signInWithFirebase = async ({ email, password }) => {
   try {

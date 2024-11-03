@@ -1,10 +1,10 @@
 import { Logout, Person, Settings } from '@mui/icons-material';
 import {
   Avatar,
+  Box,
   Button,
   CircularProgress,
   Divider,
-  IconButton,
   ListItemIcon,
   Menu,
   MenuItem,
@@ -42,16 +42,17 @@ const NavbarProfile = () => {
   if (isLoading) return <CircularProgress />;
 
   return (
-    <Stack direction={'row'} alignItems={'center'} gap={3} bgcolor={'#1F1F53'} px={2} borderRadius={2}>
-      <Typography>{`Hello, ${user?.displayName}`}</Typography>
-      <IconButton
+    <Stack direction={'row'} alignItems={'center'} gap={3} bgcolor={'#1F1F53'} py={1} px={3} borderRadius={2}>
+      <Typography>{`Hello, ${user?.displayName?.split(' ')?.[0]}`}</Typography>
+      <Box
         onClick={handleClick}
         aria-controls={open ? 'account-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
+        sx={{ cursor: 'pointer' }}
       >
         <Avatar src={user?.photoURL} />
-      </IconButton>
+      </Box>
       <Menu anchorEl={anchorEl} id="account-menu" open={open} onClose={handleClose} onClick={handleClose}>
         <MenuItem onClick={handleClose} disabled>
           <ListItemIcon>

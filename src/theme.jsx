@@ -68,6 +68,12 @@ export const theme = createTheme({
             background: '#0e0e27',
           },
         },
+        {
+          props: { variant: 'light' },
+          style: {
+            background: '#0E0E27',
+          },
+        },
       ],
     },
     MuiButton: {
@@ -153,15 +159,15 @@ export const theme = createTheme({
         },
       },
     },
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          '@media (min-width: 1200px)': {
-            maxWidth: '90%',
-          },
-        },
-      },
-    },
+    // MuiContainer: {
+    //   styleOverrides: {
+    //     root: {
+    //       '@media (min-width: 1200px)': {
+    //         maxWidth: '90%',
+    //       },
+    //     },
+    //   },
+    // },
     MuiSelect: {
       styleOverrides: {
         root: {
@@ -216,13 +222,21 @@ export const theme = createTheme({
         },
       },
     },
-    // MuiIconButton: {
-    //   styleOverrides: {
-    //     root: {
-    //       background: '#0A0A1B',
-    //       border: '1px solid #1F1F53',
-    //     },
-    //   },
-    // },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          background: '#0A0A1B',
+          border: '1px solid #1F1F53',
+        },
+      },
+      variants: [
+        {
+          props: { variant: 'squared' },
+          style: {
+            borderRadius: 8,
+          },
+        },
+      ],
+    },
   },
 });

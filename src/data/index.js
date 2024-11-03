@@ -1,45 +1,53 @@
-import { emailValidation, idValidation, experienceValidation, numberValidation, selectionValidation, stringValidation } from '../utils';
-
+import {
+  emailValidation,
+  idValidation,
+  experienceValidation,
+  numberValidation,
+  selectionValidation,
+  stringValidation,
+  passwordValidation,
+} from '../utils';
 
 export const labels = [
   {
     label: 'Full Name (English)',
-    type: 'TextField',
+    inputType: 'TextField',
     showInput: 'true',
     key: 'fullName',
     validator: stringValidation,
   },
   {
     label: 'Email',
-    type: 'TextField',
+    inputType: 'TextField',
     showInput: 'true',
     key: 'email',
     validator: emailValidation,
   },
   {
     label: 'ID',
-    type: 'TextField',
+    inputType: 'TextField',
     showInput: 'true',
     key: 'id',
     validator: idValidation,
   },
-  // {
-  //   label: "Password",
-  //   type: "TextField",
-  //   showInput: "false",
-  //   key: "password",
-  //   validator: passwordValidation,
-  // },
+  {
+    label: 'Password',
+    inputType: 'TextField',
+    type: 'password',
+    showInput: 'false',
+    key: 'password',
+    validator: passwordValidation,
+  },
   {
     label: 'Phone Number',
-    type: 'TextField',
+    inputType: 'TextField',
     showInput: 'true',
     key: 'phoneNumber',
     validator: numberValidation,
   },
   {
     label: 'Field of Study',
-    type: 'Select',
+    inputType: 'Select',
     showInput: 'true',
     options: ['מדעי המחשב', 'מערכות מידע', 'מדעי הנתונים', 'אחר'],
     key: 'fieldOfStudy',
@@ -47,7 +55,7 @@ export const labels = [
   },
   {
     label: 'School Year',
-    type: 'Select',
+    inputType: 'Select',
     showInput: 'true',
     options: ['א', 'ב', 'ג', 'ד'],
     key: 'schoolYear',
@@ -55,7 +63,7 @@ export const labels = [
   },
   {
     label: 'Program',
-    type: 'Select',
+    inputType: 'Select',
     showInput: 'true',
     options: ['בוקר', 'ערב', 'אלצ', 'אבצ'],
     key: 'program',
@@ -63,7 +71,7 @@ export const labels = [
   },
   {
     label: 'Experience',
-    type: 'Select',
+    inputType: 'Select',
     showInput: 'true',
     options: ['כן', 'לא'],
     key: 'experience',
@@ -71,7 +79,7 @@ export const labels = [
   },
   {
     label: 'Experience Details',
-    type: 'TextField',
+    inputType: 'TextField',
     showInput: 'true',
     key: 'experienceDetails',
     validator: experienceValidation,
@@ -81,9 +89,10 @@ export const labels = [
 export const allRules = [
   'כל נהלי האגודה והמכללה חלים גם במועדון.',
   'חובה להתנהג בצורה נאותה וחברית לכל אחד מחברי המועדון. הפרה של נוהל זה תוביל להוצאה מיידית מהמועדון מבלי אופציה לחזור.',
-  'העתקות במטלות (בין אם מהאינטרנט או מחברי מועדון אחרים) גררו הוצאת חבר מועדון שהעתיק.',
+  'העתקות במטלות (בין אם מהאינטרנט או מחברי מועדון אחרים) יגררו הוצאת חבר מועדון שהעתיק.',
   'חובה להגיע לכל המפגשים ובזמן, חבר שיעדר יותר מפעמיים ללא סיבה מוצדקת בסמסטר יצא מהמועדון.',
   'יש לפנות במקרה הצורך לראש הצוות בכל בעיה אישית/צוותית על מנת לפתור את הבעיה על הצד הטוב ביותר.',
+  'אני מאשר להשתמש בתמונות\\סרטונים שצולמו במהלך המפגשים לצרכי שיווק ופרסום.',
 ];
 
 export const errorMessages = {

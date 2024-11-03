@@ -21,13 +21,17 @@ const TableHeader = ({ columns ,onEditColumnHandler}) => (
               cellType={cellType}
             >
               {column.headerName}
-              <IconButton
+              {column.column_id && (
+                <IconButton
                 onClick={() => onEditColumnHandler(column.column_id)}
                 size="small"
                 aria-label="edit column"
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
+                sx={{backgroundColor: 'transparent'}}
+                >
+                  <EditIcon fontSize="small" style={{color:'#ffffff'}} />
+                </IconButton>
+              )}
+
             </StyledTableCell>
           );
         } else {
