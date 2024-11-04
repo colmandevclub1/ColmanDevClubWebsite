@@ -22,7 +22,7 @@ export const generateColumns = (data, totalColCriteria) => {
       if (row.id === 'total') {
         return <TotalRowComponent data={mainColumnData} />;
       } else {
-        return <MainColumnItem data={mainColumnData} />;
+        return <MainColumnItem key={row.id} data={mainColumnData} />;
       }
     },
   };
