@@ -3,12 +3,11 @@ import ControlTable from '../../../../ui/ControlTable/ControlTable';
 import { Box, Stack, Typography, Chip, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { userStatusService } from 'src/services/userStatusData.service';
 import { userWeekStatsService } from 'src/services/userWeekStats.service';
-import { ProgramService } from 'src/services/program.service'; // Import your ProgramService
-import { UserService } from 'src/services/user.service'; // Import UserService
+import { ProgramService } from 'src/services/program.service';
 import { weekService } from 'src/services/week.service';
 import { toast } from 'react-toastify';
-import EditWeekDialog from './EditWeekDialog'; // Adjust the import based on your file structure
-import AddMemberDialog from './AddMemberDialog'; // Import the new AddMemberDialog
+import EditWeekDialog from './EditWeekDialog';
+import AddMemberDialog from './AddMemberDialog';
 
 const defaultProgram = 'F8YNTTQXhB1nUxfcFgxG';
 
@@ -74,10 +73,10 @@ const convertToControlTableStructure = (data) => {
 const StudentsManagementTable = () => {
   const [studentsData, setStudentsData] = useState([]);
   const [openWeekModal, setOpenWeekModal] = useState(false);
-  const [editingWeekId, setEditingWeekId] = useState(null); // Track the ID of the week being edited
-  const [openMemberModal, setOpenMemberModal] = useState(false); // State for member modal  const [programs, setPrograms] = useState([]); // State to hold programs
+  const [editingWeekId, setEditingWeekId] = useState(null); 
+  const [openMemberModal, setOpenMemberModal] = useState(false);
   const [programs, setPrograms] = useState([]);
-  const [selectedProgram, setSelectedProgram] = useState(defaultProgram); // State to hold the selected program
+  const [selectedProgram, setSelectedProgram] = useState(defaultProgram); 
   const [newWeek, setNewWeek] = useState({
     title: '',
     subject: '',
@@ -90,19 +89,19 @@ const StudentsManagementTable = () => {
   });
 
   const fetchData = async (programRef) => {
-    const data = await userStatusService.getAllByProgram(programRef); // Use the programRef passed to this function
+    const data = await userStatusService.getAllByProgram(programRef);
     const formattedData = convertToControlTableStructure(data);
     setStudentsData(formattedData);
   };
 
   const fetchPrograms = async () => {
-    const programsData = await ProgramService.getAll(); // Fetch programs
-    setPrograms(programsData); // Set programs in state
+    const programsData = await ProgramService.getAll(); 
+    setPrograms(programsData); 
   };
 
   useEffect(() => {
-    fetchPrograms(); // Fetch programs when component mounts
-    fetchData(selectedProgram); // Fetch student data with default program
+    fetchPrograms();
+    fetchData(selectedProgram);
   }, []);
 
   const onChangeHandler = async (statsId, statusKey, statusValue) => {

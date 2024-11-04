@@ -42,7 +42,6 @@ const getAllByUserRef = async (userRef) => {
   }
 };
 
-// Get all user week stats by week reference
 const getAllByWeekRef = async (weekRef) => {
   try {
     const q = query(collection(db, 'userWeekStats'), where('weekRef', '==', weekRef));

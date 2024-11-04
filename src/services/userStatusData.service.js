@@ -2,8 +2,7 @@ import { toast } from 'react-toastify';
 import { UserService } from './user.service';
 import { weekService } from './week.service';
 import { userWeekStatsService } from './userWeekStats.service';
-import { ProgramService } from './program.service';
-import { roles } from 'src/constants/roles';
+
 
 const getAllByProgram = async (program = '1') => {
   try {
@@ -44,7 +43,7 @@ const getAllByProgram = async (program = '1') => {
       const resolvedUserWeeks = await Promise.all(userWeeks);
       const sortedUserWeeks = resolvedUserWeeks
         .sort((a, b) => a.order_num - b.order_num)
-        .map(({ order_num, ...rest }) => rest); // Remove order_num from each item
+        .map(({ order_num, ...rest }) => rest);
 
       data.push({
         id: member.id,

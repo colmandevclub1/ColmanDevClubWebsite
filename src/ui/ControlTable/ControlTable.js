@@ -13,7 +13,6 @@ const ControlTable = (props) => {
     if (Array.isArray(props.data) && props.data.length > 0) {
       const newColumns = generateColumns(props.data, props.totalColCriteria, props.totalRowCriteria);
       const newRows = generateRows(props.data, props.totalColCriteria, props.totalRowCriteria);
-      console.log(newRows);
       setColumns(newColumns);
       setRows(newRows);
     }

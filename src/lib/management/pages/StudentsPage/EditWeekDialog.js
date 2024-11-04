@@ -1,7 +1,7 @@
 // NewWeekDialog.js
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, FormControlLabel, Checkbox } from '@mui/material';
-import UrlInputField from '../../../../ui/UrlInputField/UrlInputField'; // Adjust the import based on your file structure
+import UrlInputField from '../../../../ui/UrlInputField/UrlInputField';
 
 const EditWeekDialog = ({ open, onClose, onAddWeek,onUpdateWeek, newWeek, setNewWeek }) => {
   const handleInputChange = (event) => {
