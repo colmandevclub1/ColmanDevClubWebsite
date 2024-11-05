@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Checkbox, FormControlLabel, List, ListItem, Typography } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Checkbox, FormControlLabel, List, ListItem, Typography,Box } from '@mui/material';
 import { UserService } from 'src/services/user.service'; 
 
 const AddMemberDialog = ({ open, onClose, programRef }) => {
@@ -7,7 +7,7 @@ const AddMemberDialog = ({ open, onClose, programRef }) => {
   const [selectedUsers, setSelectedUsers] = useState([]); 
 
   const fetchUsers = async () => {
-    const usersData = await UserService.getAllUsers();
+    const usersData = await UserService.getUsers();
     setUsers(usersData);
     
     const initialSelectedUsers = usersData.filter(user => user.appliciant_data?.programRef === programRef).map(user => user.id);
@@ -70,12 +70,14 @@ const AddMemberDialog = ({ open, onClose, programRef }) => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={handleSubmit} color="primary">
-          Update Program
-        </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+          <Button onClick={onClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} color="primary">
+            Update
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   );

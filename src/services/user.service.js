@@ -34,28 +34,24 @@ const getById = async (id) => {
     toast.error(e.message);
   }
 };
-const getAllUsers = async () => {
-  try {
-    const userCollection = collection(db, 'users-v2');
-    const userSnapshot = await getDocs(userCollection);
-    const users = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return users;
-  } catch (error) {
-    console.error('Error fetching all users:', error);
-    toast.error('Failed to fetch users');
-  }
-};
 
-const getAllUsersByProgram = async (program) => {
+const getUsers = async (programRef) => {
   try {
     const userCollection = collection(db, 'users-v2');
-    const q = query(userCollection, where('appliciant_data.programRef', '==', program));
-    const userSnapshot = await getDocs(q);
-    const users = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return users;
+    
+    if (programRef) {
+      const q = query(userCollection, where('appliciant_data.programRef', '==', programRef));
+      const userSnapshot = await getDocs(q);
+      const users = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      return users;
+    } else {
+      const userSnapshot = await getDocs(userCollection);
+      const users = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      return users;
+    }
   } catch (error) {
-    console.error('Error fetching users by program:', error);
-    toast.error('Failed to fetch users by program');
+    console.error('Error fetching users:', error);
+    toast.error('Failed to fetch users');
   }
 };
 
@@ -86,8 +82,7 @@ const updateUserProgramRef = async (userId, programRef) => {
 
 export const UserService = {
   create,
-  getAllUsers,
-  getAllUsersByProgram,
   updateUserProgramRef,
   getById,
+  getUsers
 };

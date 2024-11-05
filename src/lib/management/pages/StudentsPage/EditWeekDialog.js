@@ -1,9 +1,8 @@
-// NewWeekDialog.js
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, FormControlLabel, Checkbox } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, FormControlLabel, Checkbox,Box } from '@mui/material';
 import UrlInputField from '../../../../ui/UrlInputField/UrlInputField';
 
-const EditWeekDialog = ({ open, onClose, onAddWeek,onUpdateWeek, newWeek, setNewWeek }) => {
+const EditWeekDialog = ({ open, onClose, onAddWeek,onUpdateWeek, newWeek, setNewWeek, default_order = 0 }) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setNewWeek((prevWeek) => ({
@@ -47,7 +46,7 @@ const EditWeekDialog = ({ open, onClose, onAddWeek,onUpdateWeek, newWeek, setNew
           name="order_num"
           label="Order Number"
           fullWidth
-          value={newWeek.order_num || ''}
+          value={newWeek.order_num || default_order}
           onChange={handleInputChange}
           size="small"
           type="number"
@@ -90,12 +89,14 @@ const EditWeekDialog = ({ open, onClose, onAddWeek,onUpdateWeek, newWeek, setNew
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary" size="small">
-          Cancel
-        </Button>
-        <Button onClick={newWeek.id ? onUpdateWeek : onAddWeek} color="primary" size="small">
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+          <Button onClick={onClose} color="primary" size="small" >
+            Cancel
+          </Button>
+          <Button onClick={newWeek.id ? onUpdateWeek : onAddWeek} color="primary" size="small" >
             {newWeek.id ? "Update" : "Create"}
-        </Button>
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   );

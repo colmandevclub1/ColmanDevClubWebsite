@@ -1,12 +1,14 @@
 import { toast } from 'react-toastify';
+import UserWeekStats from 'src/classes/UserWeekStats';
 import { UserService } from './user.service';
 import { weekService } from './week.service';
 import { userWeekStatsService } from './userWeekStats.service';
+import { defaultStatsValues } from 'src/constants/studentsTable';
 
 
 const getAllByProgram = async (program = '1') => {
   try {
-    const members = await UserService.getAllUsersByProgram(program);
+    const members = await UserService.getUsers(program);
     const weeks = await weekService.getAllByProgram(program);
     const allUserWeekStats = await userWeekStatsService.getAll();
 
@@ -23,17 +25,17 @@ const getAllByProgram = async (program = '1') => {
         const userStat = userWeekStats.find((stat) => stat.weekRef === week.id);
 
         if (!userStat) {
-          const defaultStats = {
+          const defaultStats = new UserWeekStats({
             weekRef: week.id,
             userRef: member.id,
-            project_status: 'didNotSubmit',
-            presnce_status: 'missed',
+            project_status: defaultStatsValues.project_status,
+            presnce_status: defaultStatsValues.presnce_status,
             created_at: new Date(),
             updated_at: new Date(),
             updated_by: '',
-          };
+          });
 
-          const newStatRef = await userWeekStatsService.create(defaultStats);
+          const newStatRef = await userWeekStatsService.create({...defaultStats});
           return { ...defaultStats, title: weeksMap[week.id].title, id: newStatRef.id, order_num: week.order_num };
         }
 

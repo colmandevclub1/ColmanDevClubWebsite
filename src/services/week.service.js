@@ -6,20 +6,21 @@ import UserWeekStats from 'src/classes/UserWeekStats';
 import  {userWeekStatsService}  from './userWeekStats.service';
 import { roles } from 'src/constants/roles';
 import Week from 'src/classes/Week.class';
+import { defaultStatsValues } from 'src/constants/studentsTable';
 
 const create = async (newWeek) => {
   try {
     const emptyProgWeekToDb = new Week({...newWeek, programRef: ''});
     const week = await addDoc(collection(db, 'weeks'), {...emptyProgWeekToDb});
-    const users = await UserService.getAllUsers();
+    const users = await UserService.getUsers();
     users
       .filter((user) => user.role === roles.member)
       .forEach(async (user) => {
         const userWeekStats = new UserWeekStats({
           weekRef: week.id,
           userRef: user.id,
-          project_status: 'didNotSubmit',
-          presnce_status: 'missed',
+          project_status: defaultStatsValues.project_status,
+          presnce_status: defaultStatsValues.presnce_status,
           created_at: new Date(),
           updated_at: new Date(),
           updated_by: '',
@@ -36,13 +37,13 @@ const createByProgram = async (newWeek, program) => {
   try {
     const weekToDb = new Week({...newWeek, programRef: program});
     const week = await addDoc(collection(db, 'weeks'), {...weekToDb});
-    const users = await UserService.getAllUsersByProgram(program);
+    const users = await UserService.getUsers(program);
     users.forEach(async (user) => {
       const userWeekStats = new UserWeekStats({
         weekRef: week.id,
         userRef: user.id,
-        project_status: 'didNotSubmit',
-        presnce_status: 'missed',
+        project_status: defaultStatsValues.project_status,
+        presnce_status: defaultStatsValues.presnce_status,
         created_at: new Date(),
         updated_at: new Date(),
         updated_by: '',

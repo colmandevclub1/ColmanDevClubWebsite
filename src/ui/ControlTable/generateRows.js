@@ -2,7 +2,6 @@
 export const generateRows = (data, totalColCriteria, totalRowCriteria) => {
   const mainColumnKey = Object.keys(data[0])[0];
 
-
   const totalRowCountsPerCol = {};
 
   const rows = data.map((rowData, index) => {

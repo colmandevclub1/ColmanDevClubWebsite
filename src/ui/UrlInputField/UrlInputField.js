@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { TextField, Button, Chip, Stack, Tooltip } from '@mui/material';
+import { TextField, Button, Stack, Tooltip } from '@mui/material';
+import StyledChip from '../StyledChip/StyledChip';
 
 const UrlInputField = ({ label, urlString, setUrlString }) => {
   const [url, setUrl] = useState('');
@@ -38,22 +39,11 @@ const UrlInputField = ({ label, urlString, setUrlString }) => {
       <Stack direction="row" sx={{ flexWrap: 'wrap' }}>
         {urlsArray.map((u) => (
           <Tooltip title={u} key={u} placement="top">
-            <Chip
+            <StyledChip
+              key={u}
               label={u}
               onDelete={() => handleDeleteUrl(u)}
-              variant='outlined'
-              sx={{
-                maxWidth: 100,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis', 
-                whiteSpace: 'nowrap', 
-                cursor: 'pointer',
-                color: (theme) => theme.palette.primary.dark,
-                borderColor: (theme) => theme.palette.primary.main,
-                '&:hover': {
-                  color: (theme) => theme.palette.primary.main,
-                },
-              }}
+              sx={{ maxWidth: 100 }} 
             />
           </Tooltip>
         ))}
