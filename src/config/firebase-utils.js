@@ -1,6 +1,12 @@
 import { collection, getDocs } from 'firebase/firestore';
 import { auth, db } from './firebase-config';
-import { createUserWithEmailAndPassword, updateProfile, deleteUser, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  deleteUser,
+  signInWithEmailAndPassword,
+  getAuth,
+} from 'firebase/auth';
 import { toast } from 'react-toastify';
 
 export const signupWithFirebase = async ({ email, password }) => {
@@ -14,14 +20,18 @@ export const signupWithFirebase = async ({ email, password }) => {
   }
 };
 
-export const updateUser = async(user, data) => {
+export const getAllUsers = async () => {
+  const users = getAuth().getUsers;
+};
+
+export const updateUser = async (user, data) => {
   try {
     await updateProfile(user, data);
   } catch (error) {
-    toast.error("Failed to update user")
+    toast.error('Failed to update user');
     console.error(`Failed to update user: ${error}`);
   }
-}
+};
 
 export const signInWithFirebase = async ({ email, password }) => {
   try {
