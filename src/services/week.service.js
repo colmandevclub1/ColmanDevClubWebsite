@@ -3,21 +3,29 @@ import { toast } from 'react-toastify';
 import { db } from 'src/config/firebase-config';
 import { UserService } from './user.service';
 import UserWeekStats from 'src/classes/UserWeekStats';
+import  {userWeekStatsService}  from './userWeekStats.service';
 import { roles } from 'src/constants/roles';
+import Week from 'src/classes/Week.class';
+import { defaultStatsValues } from 'src/constants/studentsTable';
 
 const create = async (newWeek) => {
   try {
-    const week = await addDoc(collection(db, 'weeks'), newWeek);
-    const users = await UserService.getAll();
+    const emptyProgWeekToDb = new Week({...newWeek, programRef: ''});
+    const week = await addDoc(collection(db, 'weeks'), {...emptyProgWeekToDb});
+    const users = await UserService.getUsers();
     users
       .filter((user) => user.role === roles.member)
       .forEach(async (user) => {
         const userWeekStats = new UserWeekStats({
           weekRef: week.id,
           userRef: user.id,
+          project_status: defaultStatsValues.project_status,
+          presnce_status: defaultStatsValues.presnce_status,
           created_at: new Date(),
+          updated_at: new Date(),
+          updated_by: '',
         });
-        await UserWeekStats.create({ ...userWeekStats });
+        await userWeekStatsService.create({ ...userWeekStats });
       });
     return week;
   } catch (error) {
@@ -25,12 +33,52 @@ const create = async (newWeek) => {
   }
 };
 
-const get = async (id) => {
+const createByProgram = async (newWeek, program) => {
   try {
-    const week = await getDoc(doc(db, 'weeks', id));
+    const weekToDb = new Week({...newWeek, programRef: program});
+    const week = await addDoc(collection(db, 'weeks'), {...weekToDb});
+    const users = await UserService.getUsers(program);
+    users.forEach(async (user) => {
+      const userWeekStats = new UserWeekStats({
+        weekRef: week.id,
+        userRef: user.id,
+        project_status: defaultStatsValues.project_status,
+        presnce_status: defaultStatsValues.presnce_status,
+        created_at: new Date(),
+        updated_at: new Date(),
+        updated_by: '',
+      });
+      await userWeekStatsService.create({ ...userWeekStats }, program);
+    });
     return week;
   } catch (error) {
     toast.error(error.message);
+  }
+};
+const get = async (id) => {
+  try {
+    const weekSnapshot = await getDoc(doc(db, 'weeks', id));
+    if (weekSnapshot.exists()) {
+      const weekData = weekSnapshot.data();
+      return weekData;
+    } else {
+      toast.error("No document found with the given ID");
+      return null;
+    }
+  } catch (error) {
+    toast.error(error.message);
+    return null;
+  }
+};
+
+
+const getAll = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'weeks'));
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    toast.error('Failed to fetch weeks');
+    console.error('Error fetching all weeks:', error);
   }
 };
 
@@ -62,8 +110,10 @@ const remove = async (id) => {
 
 export const weekService = {
   create,
+  createByProgram,
   get,
   update,
   remove,
   getAllByProgram,
+  getAll,
 };

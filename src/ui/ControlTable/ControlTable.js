@@ -13,9 +13,12 @@ const ControlTable = (props) => {
     if (Array.isArray(props.data) && props.data.length > 0) {
       const newColumns = generateColumns(props.data, props.totalColCriteria, props.totalRowCriteria);
       const newRows = generateRows(props.data, props.totalColCriteria, props.totalRowCriteria);
-      console.log(newRows);
       setColumns(newColumns);
       setRows(newRows);
+    }
+    else {
+      setColumns([]);
+      setRows([]);
     }
   }, [props.data]);
 
@@ -23,10 +26,10 @@ const ControlTable = (props) => {
     <TableContainer component={Paper} sx={{ borderRadius: 3, overflow: 'auto', height: '80svh' }}>
       <Table sx={{ tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 5 }}>
         <TableHead sx={{ position: 'sticky', top: '5px', zIndex: 1 }}>
-          <TableHeader columns={columns} />
+          <TableHeader columns={columns} onEditColumnHandler={props.onEditColumnHandler} />
         </TableHead>
         <TableBody>
-          <TableBodyContent rows={rows} columns={columns} columnColorsMap={props.columnColorsMap} />
+          <TableBodyContent rows={rows} columns={columns} columnColorsMap={props.columnColorsMap} onChangeHandler={props.onChangeHandler}  />
         </TableBody>
       </Table>
     </TableContainer>

@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc,getDocs, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { db } from 'src/config/firebase-config';
 
@@ -17,6 +17,16 @@ const get = async (id) => {
     return program;
   } catch (error) {
     toast.error(error.message);
+  }
+};
+
+const getAll = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'programs'));
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    toast.error('Failed to fetch programs');
+    console.error('Error fetching all programs:', error);
   }
 };
 
@@ -41,4 +51,5 @@ export const ProgramService = {
   get,
   update,
   remove,
+  getAll
 };
