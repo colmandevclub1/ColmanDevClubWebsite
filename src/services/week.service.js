@@ -7,11 +7,11 @@ import  {userWeekStatsService}  from './userWeekStats.service';
 import { roles } from 'src/constants/roles';
 import Week from 'src/classes/Week.class';
 import { defaultStatsValues } from 'src/constants/studentsTable';
-
+import {WEEKS_COLLECTION} from 'src/constants/collectionsDB';
 const create = async (newWeek) => {
   try {
     const emptyProgWeekToDb = new Week({...newWeek, programRef: ''});
-    const week = await addDoc(collection(db, 'weeks'), {...emptyProgWeekToDb});
+    const week = await addDoc(collection(db, WEEKS_COLLECTION), {...emptyProgWeekToDb});
     const users = await UserService.getUsers();
     users
       .filter((user) => user.role === roles.member)
@@ -36,7 +36,7 @@ const create = async (newWeek) => {
 const createByProgram = async (newWeek, program) => {
   try {
     const weekToDb = new Week({...newWeek, programRef: program});
-    const week = await addDoc(collection(db, 'weeks'), {...weekToDb});
+    const week = await addDoc(collection(db, WEEKS_COLLECTION), {...weekToDb});
     const users = await UserService.getUsers(program);
     users.forEach(async (user) => {
       const userWeekStats = new UserWeekStats({
@@ -57,7 +57,7 @@ const createByProgram = async (newWeek, program) => {
 };
 const get = async (id) => {
   try {
-    const weekSnapshot = await getDoc(doc(db, 'weeks', id));
+    const weekSnapshot = await getDoc(doc(db, WEEKS_COLLECTION, id));
     if (weekSnapshot.exists()) {
       const weekData = weekSnapshot.data();
       return weekData;
@@ -74,7 +74,7 @@ const get = async (id) => {
 
 const getAll = async () => {
   try {
-    const querySnapshot = await getDocs(collection(db, 'weeks'));
+    const querySnapshot = await getDocs(collection(db, WEEKS_COLLECTION));
     return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     toast.error('Failed to fetch weeks');
@@ -84,7 +84,7 @@ const getAll = async () => {
 
 const getAllByProgram = async (programId) => {
   try {
-    const querySnapshot = await getDocs(collection(db, 'weeks'));
+    const querySnapshot = await getDocs(collection(db, WEEKS_COLLECTION));
     const weeks = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return weeks.filter((week) => week.programRef === programId);
   } catch (error) {
@@ -94,7 +94,7 @@ const getAllByProgram = async (programId) => {
 
 const update = async (id, updatedWeek) => {
   try {
-    await setDoc(doc(db, 'weeks', id), updatedWeek);
+    await setDoc(doc(db, WEEKS_COLLECTION, id), updatedWeek);
   } catch (error) {
     toast.error(error.message);
   }
@@ -102,7 +102,7 @@ const update = async (id, updatedWeek) => {
 
 const remove = async (id) => {
   try {
-    await deleteDoc(doc(db, 'weeks', id));
+    await deleteDoc(doc(db, WEEKS_COLLECTION, id));
   } catch (error) {
     toast.error(error.message);
   }

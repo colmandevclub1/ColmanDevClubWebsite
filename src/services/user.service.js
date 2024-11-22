@@ -2,9 +2,9 @@ import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from '
 import { Validators } from './validators.service';
 import { toast } from 'react-toastify';
 import { db } from 'src/config/firebase-config';
-
+import {USERS_COLLECTION} from 'src/constants/collectionsDB';
 const create = async ({ userCredential, first_name, last_name, role, card_id, appliciant_data }) => {
-  const userDocRef = doc(db, 'users-v2', userCredential.uid);
+  const userDocRef = doc(db, USERS_COLLECTION, userCredential.uid);
   const userDoc = {
     first_name,
     last_name,
@@ -24,7 +24,7 @@ const create = async ({ userCredential, first_name, last_name, role, card_id, ap
 
 const getById = async (id) => {
   try {
-    const userDocRef = doc(db, 'users-v2', id);
+    const userDocRef = doc(db, USERS_COLLECTION, id);
     const userDocSnap = await getDoc(userDocRef);
     if (!userDocSnap.exists()) return null;
 
@@ -37,7 +37,7 @@ const getById = async (id) => {
 
 const getUsers = async (programRef) => {
   try {
-    const userCollection = collection(db, 'users-v2');
+    const userCollection = collection(db, USERS_COLLECTION);
     
     if (programRef) {
       const q = query(userCollection, where('appliciant_data.programRef', '==', programRef));
@@ -57,7 +57,7 @@ const getUsers = async (programRef) => {
 
 const updateUserProgramRef = async (userId, programRef) => {
   try {
-    const userDocRef = doc(db, 'users-v2', userId);
+    const userDocRef = doc(db, USERS_COLLECTION, userId);
     const userDocSnap = await getDoc(userDocRef);
 
     if (userDocSnap.exists()) {

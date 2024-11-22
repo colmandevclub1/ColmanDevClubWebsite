@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import EditWeekDialog from './EditWeekDialog';
 import AddMemberDialog from './AddMemberDialog';
 import ControlPanel from './ControlPanel';
-import { defaultProgram, columnColorsMap, totalColCriteria, totalRowCriteria, titlesMap, newWeekJson } from '../../../../constants/studentsTable';
+import { defaultProgram, columnColorsMap, totalColCriteria, totalRowCriteria, titlesMap, newWeekJson } from 'src/constants/studentsTable';
 import { convertToControlTableStructure } from '../../../../utils/studentsTable';
 
 const StudentsManagementTable = () => {
@@ -42,7 +42,25 @@ const StudentsManagementTable = () => {
     fetchPrograms();
     fetchData(selectedProgram);
     fetchWeeks();
-  }, []);
+  }, [selectedProgram]);
+
+  const updateStudentData = (statsId, statusKey, statusValue, prevData) => {
+    return prevData.map((member) => {
+      const updatedMember = { ...member };
+      Object.keys(updatedMember).forEach((key) => {
+        if (key !== 'person') {
+          const weekData = updatedMember[key];
+          if (weekData && weekData.id === statsId) {
+            updatedMember[key] = {
+              ...weekData,
+              [statusKey]: statusValue,
+            };
+          }
+        }
+      });
+      return updatedMember;
+    });
+  };
 
   const onChangeHandler = async (statsId, statusKey, statusValue) => {
     try {
@@ -51,23 +69,7 @@ const StudentsManagementTable = () => {
       };
       await userWeekStatsService.update(statsId, updatedStats);
 
-      setStudentsData((prevData) =>
-        prevData.map((member) => {
-          const updatedMember = { ...member };
-          Object.keys(updatedMember).forEach((key) => {
-            if (key !== 'person') {
-              const weekData = updatedMember[key];
-              if (weekData && weekData.id === statsId) {
-                updatedMember[key] = {
-                  ...weekData,
-                  [statusKey]: statusValue,
-                };
-              }
-            }
-          });
-          return updatedMember;
-        })
-      );
+      setStudentsData((prevData) => updateStudentData(statsId, statusKey, statusValue, prevData));
     } catch (error) {
       console.error('Error updating stats:', error);
       toast.error('Failed to update stats');

@@ -10,16 +10,10 @@ const ControlTable = (props) => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (Array.isArray(props.data) && props.data.length > 0) {
       const newColumns = generateColumns(props.data, props.totalColCriteria, props.totalRowCriteria);
       const newRows = generateRows(props.data, props.totalColCriteria, props.totalRowCriteria);
       setColumns(newColumns);
       setRows(newRows);
-    }
-    else {
-      setColumns([]);
-      setRows([]);
-    }
   }, [props.data]);
 
   return (

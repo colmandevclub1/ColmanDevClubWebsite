@@ -10,6 +10,8 @@ const TotalRowComponent = ({ data }) => {
 };
 
 export const generateColumns = (data, totalColCriteria) => {
+  if (!Array.isArray(data) || data.length === 0) { return []; }
+
   const firstRow = data[0];
   const mainColumnKey = Object.keys(firstRow)[0];
 

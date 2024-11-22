@@ -1,5 +1,7 @@
 
 export const generateRows = (data, totalColCriteria, totalRowCriteria) => {
+  if (! Array.isArray(data) || data.length === 0) { return []; }
+
   const mainColumnKey = Object.keys(data[0])[0];
 
   const totalRowCountsPerCol = {};

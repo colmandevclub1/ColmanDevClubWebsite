@@ -18,6 +18,15 @@ const EditWeekDialog = ({ open, onClose, onAddWeek,onUpdateWeek, newWeek, setNew
     }));
   };
 
+    // Define the list of URLs
+    const urlFields = [
+      { label: 'Presentation Links', fieldName: 'presantaion_links' },
+      { label: 'YouTube Links', fieldName: 'youtube_links' },
+      { label: 'Project Link', fieldName: 'project_link' },
+      { label: 'Exercise Link', fieldName: 'exercise_link' },
+      { label: 'Other Links', fieldName: 'other_links' },
+    ];
+  
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{newWeek.id ? "Edit Week" : "Create a New Week"}</DialogTitle>
@@ -51,31 +60,18 @@ const EditWeekDialog = ({ open, onClose, onAddWeek,onUpdateWeek, newWeek, setNew
           size="small"
           type="number"
         />
-        <UrlInputField 
-          label="Presentation Links"
-          urlString={newWeek.presantaion_links}
-          setUrlString={(urls) => setNewWeek(prev => ({ ...prev, presantaion_links: urls }))}
-        />
-        <UrlInputField 
-          label="YouTube Links"
-          urlString={newWeek.youtube_links}
-          setUrlString={(urls) => setNewWeek(prev => ({ ...prev, youtube_links: urls }))}
-        />
-        <UrlInputField 
-          label="Project Link"
-          urlString={newWeek.project_link}
-          setUrlString={(urls) => setNewWeek(prev => ({ ...prev, project_link: urls }))}
-        />
-        <UrlInputField 
-          label="Exercise Link"
-          urlString={newWeek.exercise_link}
-          setUrlString={(urls) => setNewWeek(prev => ({ ...prev, exercise_link: urls }))}
-        />
-        <UrlInputField 
-          label="Other Links"
-          urlString={newWeek.other_links}
-          setUrlString={(urls) => setNewWeek(prev => ({ ...prev, other_links: urls }))}
-        />
+
+        {urlFields.map((field) => (
+          <UrlInputField
+            key={field.fieldName}
+            label={field.label}
+            urlString={newWeek[field.fieldName]}
+            setUrlString={(urls) =>
+              setNewWeek((prev) => ({ ...prev, [field.fieldName]: urls }))
+            }
+          />
+        ))}
+
         <FormControlLabel
           control={
             <Checkbox
